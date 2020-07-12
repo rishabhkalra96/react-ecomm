@@ -1,12 +1,17 @@
 .header-container {
+    color: #ffffff;
     display: flex;
     justify-content: space-between;
-    height: 7.5%;
-    background-color: rgb(43, 127, 184);
+    height: 7%;
+    background-color: #494D5F;
     section.left-section, section.middle-section, section.right-section {
         text-align: center;
         display: block;
         flex: 1;
         background-color:inherit;
+    }
+
+    section.left-section, section.right-section {
+        max-width: 20%;
     }
 }

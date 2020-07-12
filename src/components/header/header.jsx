@@ -1,6 +1,6 @@
 import React from "react";
 import './header.scss'
-
+import {CommonFeatureSearch} from "./../common-feature-search/common-feature-search"
 
 export class Header extends React.Component {
 
@@ -11,7 +11,7 @@ export class Header extends React.Component {
                     <p>Left</p>
                 </section>
                 <section className="middle-section">
-                <p>Middle</p>
+                <CommonFeatureSearch />
                 </section>
                 <section className="right-section">
                 <p>right</p>
