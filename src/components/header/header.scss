@@ -1,0 +1,12 @@
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    height: 7.5%;
+    background-color: rgb(43, 127, 184);
+    section.left-section, section.middle-section, section.right-section {
+        text-align: center;
+        display: block;
+        flex: 1;
+        background-color:inherit;
+    }
+}
