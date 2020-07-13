@@ -5,13 +5,16 @@
     height: 7%;
     background-color: #494D5F;
     section.left-section, section.middle-section, section.right-section {
-        text-align: center;
         display: block;
         flex: 1;
         background-color:inherit;
     }
 
-    section.left-section, section.right-section {
+    section.left-section {
+        max-width: 15%;
+    }
+
+    section.right-section {
         max-width: 20%;
     }
 }

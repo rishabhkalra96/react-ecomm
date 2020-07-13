@@ -1,6 +1,7 @@
 import React from "react";
 import './header.scss'
 import {CommonFeatureSearch} from "./../common-feature-search/common-feature-search"
+import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
 
 export class Header extends React.Component {
 
@@ -8,7 +9,7 @@ export class Header extends React.Component {
         return (
             <div className="header-container">
                 <section className="left-section">
-                    <p>Left</p>
+                    <HamburgerBtn />
                 </section>
                 <section className="middle-section">
                 <CommonFeatureSearch />
