@@ -5,11 +5,26 @@ import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
 
 export class Header extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            showSidebar: false,
+            isLoggedIn: false
+        }
+    }
+
+    toggleSidebar = () => {
+        this.setState({
+            showSidebar: !this.state.showSidebar
+        })
+        console.log('sidebar now is ', this.state.showSidebar)
+    }
+
     render() {
         return (
             <div className="header-container">
                 <section className="left-section">
-                    <HamburgerBtn />
+                    <HamburgerBtn itemClick={this.toggleSidebar}/>
                 </section>
                 <section className="middle-section">
                 <CommonFeatureSearch />
