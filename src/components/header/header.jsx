@@ -2,6 +2,8 @@ import React from "react";
 import './header.scss'
 import {CommonFeatureSearch} from "./../common-feature-search/common-feature-search"
 import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
+import { CartButton } from "../cart-btn/cart-btn";
+import { UiButton } from "../ui-button/ui-btn";
 
 export class Header extends React.Component {
 
@@ -9,7 +11,11 @@ export class Header extends React.Component {
         super(props);
         this.state = {
             showSidebar: false,
-            isLoggedIn: false
+            isLoggedIn: false,
+            UIBtnCSS: {
+                "backgroundColor": "#494D5F",
+                "color": "white",
+            }
         }
     }
 
@@ -17,7 +23,10 @@ export class Header extends React.Component {
         this.setState({
             showSidebar: !this.state.showSidebar
         })
-        console.log('sidebar now is ', this.state.showSidebar)
+    }
+
+    cartClickEvent = () => {
+        console.log('clicked')
     }
 
     render() {
@@ -30,7 +39,10 @@ export class Header extends React.Component {
                 <CommonFeatureSearch />
                 </section>
                 <section className="right-section">
-                <p>right</p>
+                    <div className="right-container">
+                    <CartButton route={'/cart'} clickEvent={this.cartClickEvent}/>
+                    <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'}/>
+                    </div>
                 </section>
             </div>
         )
