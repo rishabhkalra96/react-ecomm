@@ -1,9 +1,10 @@
 import React from "react";
 import './header.scss'
-import {CommonFeatureSearch} from "./../common-feature-search/common-feature-search"
+import { CommonFeatureSearch } from "./../common-feature-search/common-feature-search"
 import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
 import { CartButton } from "../cart-btn/cart-btn";
 import { UiButton } from "../ui-button/ui-btn";
+import { Sidebar } from "../side-bar/side-bar";
 
 export class Header extends React.Component {
 
@@ -31,20 +32,23 @@ export class Header extends React.Component {
 
     render() {
         return (
-            <div className="header-container">
-                <section className="left-section">
-                    <HamburgerBtn itemClick={this.toggleSidebar}/>
-                </section>
-                <section className="middle-section">
-                <CommonFeatureSearch />
-                </section>
-                <section className="right-section">
-                    <div className="right-container">
-                    <CartButton route={'/cart'} clickEvent={this.cartClickEvent}/>
-                    <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'}/>
-                    </div>
-                </section>
-            </div>
+            <React.Fragment>
+                <div className="header-container">
+                    <section className="left-section">
+                        <HamburgerBtn itemClick={this.toggleSidebar} />
+                    </section>
+                    <section className="middle-section">
+                        <CommonFeatureSearch />
+                    </section>
+                    <section className="right-section">
+                        <div className="right-container">
+                            <CartButton route={'/cart'} clickEvent={this.cartClickEvent} />
+                            <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} />
+                        </div>
+                    </section>
+                </div>
+                <Sidebar show={this.state.showSidebar} onClose={this.toggleSidebar}/>
+            </React.Fragment>
         )
     }
 }
