@@ -1,7 +1,9 @@
+import requests from './../config/requests';
+
 export const SidebarService = {
     fetchSidebarConfig: async () => {
         try {
-            let response = await fetch('https://reqres.in/api/users?page=2')
+            let response = await fetch(requests.sidebarConfigAPI)
             return response
         } catch(fetchErr) {
             console.error('An Error occured while fetching config for sidebar')
