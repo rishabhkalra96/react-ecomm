@@ -1,10 +1,13 @@
 import React from "react";
 import './header.scss'
+// components
 import { CommonFeatureSearch } from "./../common-feature-search/common-feature-search"
 import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
 import { CartButton } from "../cart-btn/cart-btn";
 import { UiButton } from "../ui-button/ui-btn";
 import { Sidebar } from "../side-bar/side-bar";
+// services
+import {SidebarService} from './../../services/sidebar-service';
 
 export class Header extends React.Component {
 
@@ -16,7 +19,21 @@ export class Header extends React.Component {
             UIBtnCSS: {
                 "backgroundColor": "#494D5F",
                 "color": "white",
-            }
+            },
+            sidebarConfig: null
+        }
+    }
+
+    async componentDidMount() {
+        console.log('component mounted')
+        const response = await SidebarService.fetchSidebarLocal()
+        if (response && response.status === 200) {
+            console.log('data recieved ', response)
+            this.setState({
+                sidebarConfig: response.data
+            })
+        } else {
+            console.error('No data for sidebar')
         }
     }
 
@@ -47,7 +64,11 @@ export class Header extends React.Component {
                         </div>
                     </section>
                 </div>
-                <Sidebar show={this.state.showSidebar} onClose={this.toggleSidebar}/>
+                <Sidebar 
+                    show={this.state.showSidebar}
+                    data={this.state.sidebarConfig}
+                    onClose={this.toggleSidebar}
+                    />
             </React.Fragment>
         )
     }

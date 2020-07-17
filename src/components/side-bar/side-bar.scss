@@ -24,10 +24,62 @@
     top: 0;
     left: 0;
     background-color: whitesmoke;
-    transform: translateX(-100%);
+    transform: translateX(-150%);
     transition: .5s ease-in;
+    .sidebar-title, .sidebar-body {
+        width: 100%;
+    }
+    .button-right-extreme {
+        position: absolute;
+        right: -50px;
+    }
+    .sidebar-title {
+        height: 7%;
+        color: whitesmoke;
+        font-weight: bolder;
+        background-color: #494D5F;
+    }
+
+    .sidebar-body {
+        height: 93%;
+        .items-container {
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            .sidebar-item {
+                height: 70px;
+                width: 100%;
+                margin: auto;
+                &:hover {
+                    background-color: whitesmoke;
+                    color: #494D5F;
+                    font-weight: 700;
+                    transition: color 0.4s
+                }
+                .item-name {
+                    margin-left: 20px;
+                }
+            }
+            
+        }
+    }
 }
 
 .show {
     transform: translateX(0%);
+}
+
+.flex-item {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.flex-item.item-center {
+    align-items: center;
+}
+
+.flex-item.space-evenly {
+    justify-content: space-evenly;
 }
