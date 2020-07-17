@@ -1,6 +1,7 @@
 import React from 'react';
 import './side-bar.scss';
 import CloseBtn from './../shared/close-btn/close-btn.jsx';
+import ProfileBtn from './../shared/profile-btn/profile-btn.jsx';
 
 export class Sidebar extends React.Component {
 
@@ -36,9 +37,12 @@ export class Sidebar extends React.Component {
                 <div className={sidebarClasses}>
                     <CloseBtn onClick={this.closeSidebar} classes={'button-right-extreme'}/>
                     <div className="sidebar-title flex-item item-center space-evenly">
-                        <p>
+                        <div className="title-content-wrapper flex-item item-center">
+                        <ProfileBtn />
+                        <p className="title-content">
                             {'Hi, Yashneet'}
                         </p>
+                        </div>
                     </div>
                     <div className="sidebar-body">
                         {this.generatelistItems(sidebarData)}
