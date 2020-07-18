@@ -47,6 +47,10 @@ export class Header extends React.Component {
         console.log('clicked')
     }
 
+    login = () => {
+        console.log('login')
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -60,7 +64,7 @@ export class Header extends React.Component {
                     <section className="right-section">
                         <div className="right-container">
                             <CartButton route={'/cart'} clickEvent={this.cartClickEvent} />
-                            <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} />
+                            <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} onBtnClick={this.login}/>
                         </div>
                     </section>
                 </div>

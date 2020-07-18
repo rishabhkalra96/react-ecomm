@@ -1,13 +1,17 @@
 .cardItem-wrapper {
     padding: 10px;
     width: 250px;
-    height: 300px;
+    height: 350px;
 }
 .cardItem-container {
-    width: 200px;
-    height: 300px;
+    width: 230px;
+    height: 330px;
     margin: auto;
     background-color: white;
-    margin: 5px;
-    box-shadow: 8px 13px 33px -6px rgba(224,224,224,1);
+    margin: 15px;
+    cursor: pointer;
+    transition: box-shadow 0.5s ease-out;
+    &:hover {
+        box-shadow: 11px 10px 23px -4px rgba(212,212,212,1);
+    }
 }

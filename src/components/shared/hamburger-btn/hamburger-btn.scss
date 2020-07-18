@@ -6,5 +6,10 @@ button.hamburger-btn {
     height: 40px;
     img {
         height: 93%;
+        &:hover {
+            border: 1px solid whitesmoke;
+            border-radius: 3px;
+            transition: 0.3s;
+        }
     }
 }
