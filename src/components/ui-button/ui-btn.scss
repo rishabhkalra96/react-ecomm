@@ -1,11 +1,4 @@
 .ui-button {
-    width: 70px;
-    height: 35px;
-    font-size: 0.9rem;
-    align-self: center;
-    border: none;
-    cursor: pointer;
-    transition: 0.5s;
     &:hover {
         background-color: yellow !important;
         color: black !important;

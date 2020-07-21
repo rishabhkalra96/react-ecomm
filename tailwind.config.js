@@ -8,6 +8,9 @@ module.exports = {
     ],
     theme: {
       extend: {},
+      fontSize: {
+          'ui-btn-default': '0.9rem' ,
+      }
     },
     variants: {},
     plugins: [],
