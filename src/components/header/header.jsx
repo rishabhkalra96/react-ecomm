@@ -7,7 +7,8 @@ import { CartButton } from "../cart-btn/cart-btn";
 import { UiButton } from "../ui-button/ui-btn";
 import { Sidebar } from "../side-bar/side-bar";
 // services
-import {SidebarService} from './../../services/sidebar-service';
+import { SidebarService } from './../../services/sidebar-service';
+import { Link } from "react-router-dom";
 
 export class Header extends React.Component {
 
@@ -20,7 +21,8 @@ export class Header extends React.Component {
                 "backgroundColor": "#494D5F",
                 "color": "white",
             },
-            sidebarConfig: null
+            sidebarConfig: null,
+            redirectToLogin: false,
         }
     }
 
@@ -49,6 +51,7 @@ export class Header extends React.Component {
 
     login = () => {
         console.log('login')
+        this.setState({ redirectToLogin: true })
     }
 
     render() {
@@ -64,15 +67,21 @@ export class Header extends React.Component {
                     <section className="right-section">
                         <div className="right-container">
                             <CartButton route={'/cart'} clickEvent={this.cartClickEvent} />
-                            <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} onBtnClick={this.login}/>
+                            {
+                            this.state.isLoggedIn ? 
+                            null : 
+                            <Link to="/login" >
+                                <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} onBtnClick={this.login} />
+                            </Link>
+                            }
                         </div>
                     </section>
                 </div>
-                <Sidebar 
+                <Sidebar
                     show={this.state.showSidebar}
                     data={this.state.sidebarConfig}
                     onClose={this.toggleSidebar}
-                    />
+                />
             </React.Fragment>
         )
     }

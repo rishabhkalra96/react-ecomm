@@ -4,11 +4,20 @@ import './App.scss';
 import { Header } from './components/header/header';
 import { ContentBody } from './components/content-body/content-body';
 
+import {
+  BrowserRouter as Router,
+  Route,
+} from "react-router-dom";
+
 function App() {
   return (
     <div className="App">
+      <Router>
       <Header />
-      <ContentBody/>
+      <Route exact path="/">
+        <ContentBody />
+      </Route>
+      </Router>
     </div>
   );
 }
