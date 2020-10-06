@@ -1,32 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './content-body.scss';
 import { ContentBodyService } from './../../services/content-body-service'
 import SlideShow from '../shared/slide-show/slide-show';
 import CardCarousel from '../shared/card-carousel/card-carousel';
+import { useState } from 'react';
 
-export class ContentBody extends React.Component {
+export const ContentBody = () => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            bannerUrls: []
-        }
-    }
+    const [bannerUrls, setBannerUrls] = useState([]);
 
-    componentDidMount() {
+    useEffect(() => {
         const urls = ContentBodyService.slideUrls()
-        this.setState({
-            bannerUrls: urls
-        })
-    }
+        setBannerUrls(urls)
+    }, [])
 
-    getBannerTemplates = (urls) => {
+    const getBannerTemplates = (urls) => {
         return urls.map((url, idx) => {
             return <SlideShow source={url} key={"slider_" + idx} />
         })
     }
 
-    getCategories = () => {
+    const getCategories = () => {
         return (
             <React.Fragment>
                 <CardCarousel title={'Recommended Items'} />
@@ -36,15 +30,13 @@ export class ContentBody extends React.Component {
         )
     }
 
-    render() {
-        return (
-            <React.Fragment>
-                <div className="content-container">
-                    {this.state.bannerUrls.length && this.getBannerTemplates(this.state.bannerUrls)}
-                    {this.getCategories()}
-                </div>
-            </React.Fragment>
-        )
-    }
+    return (
+        <React.Fragment>
+            <div className="content-container">
+                {bannerUrls.length && getBannerTemplates(bannerUrls)}
+                {getCategories()}
+            </div>
+        </React.Fragment>
+    )
 }
 
