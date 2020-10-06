@@ -9,80 +9,81 @@ import { Sidebar } from "../side-bar/side-bar";
 // services
 import { SidebarService } from './../../services/sidebar-service';
 import { Link } from "react-router-dom";
+import {useState, useEffect} from 'react';
 
-export class Header extends React.Component {
+export const Header = () => {
+    const [showSidebar, setShowSidebar] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [sidebarConfig, setSidebarConfig] = useState(null);
+    const setRedirectToLogin = useState(false)[1];
+    const UIBtnCSS = {
+        "backgroundColor": "#494D5F",
+        "color": "white",
+    };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showSidebar: false,
-            isLoggedIn: false,
-            UIBtnCSS: {
-                "backgroundColor": "#494D5F",
-                "color": "white",
-            },
-            sidebarConfig: null,
-            redirectToLogin: false,
+    useEffect(() => {
+        async function caller() {
+            const config = await getSideBarData()
+            if (config.length) {
+                setSidebarConfig(config);
+            } else {
+                setSidebarConfig(null);
+            }
         }
+        caller()
+    }, [])
+
+    const toggleSidebar = () => {
+        setShowSidebar(!showSidebar)
     }
 
-    async componentDidMount() {
-        console.log('component mounted')
-        const response = await SidebarService.fetchSidebarLocal()
-        if (response && response.status === 200) {
-            console.log('data recieved ', response)
-            this.setState({
-                sidebarConfig: response.data
-            })
-        } else {
-            console.error('No data for sidebar')
-        }
-    }
-
-    toggleSidebar = () => {
-        this.setState({
-            showSidebar: !this.state.showSidebar
-        })
-    }
-
-    cartClickEvent = () => {
+    const cartClickEvent = () => {
         console.log('clicked')
     }
 
-    login = () => {
+    const login = () => {
         console.log('login')
-        this.setState({ redirectToLogin: true })
+        setIsLoggedIn(true)
+        setRedirectToLogin(true)
     }
 
-    render() {
-        return (
-            <React.Fragment>
-                <div className="header-container">
-                    <section className="left-section">
-                        <HamburgerBtn itemClick={this.toggleSidebar} />
-                    </section>
-                    <section className="middle-section">
-                        <CommonFeatureSearch />
-                    </section>
-                    <section className="right-section">
-                        <div className="right-container">
-                            <CartButton route={'/cart'} clickEvent={this.cartClickEvent} />
-                            {
-                            this.state.isLoggedIn ? 
-                            null : 
-                            <Link to="/login" >
-                                <UiButton UIStyle={this.state.UIBtnCSS} text={'Login'} onBtnClick={this.login} />
-                            </Link>
-                            }
-                        </div>
-                    </section>
-                </div>
-                <Sidebar
-                    show={this.state.showSidebar}
-                    data={this.state.sidebarConfig}
-                    onClose={this.toggleSidebar}
-                />
-            </React.Fragment>
-        )
-    }
+    return (
+        <React.Fragment>
+            <div className="header-container">
+                <section className="left-section">
+                    <HamburgerBtn itemClick={toggleSidebar} />
+                </section>
+                <section className="middle-section">
+                    <CommonFeatureSearch />
+                </section>
+                <section className="right-section">
+                    <div className="right-container">
+                        <CartButton route={'/cart'} clickEvent={cartClickEvent} />
+                        {
+                        isLoggedIn ? 
+                        null : 
+                        <Link to="/login" >
+                            <UiButton UIStyle={UIBtnCSS} text={'Login'} onBtnClick={login} />
+                        </Link>
+                        }
+                    </div>
+                </section>
+            </div>
+            <Sidebar
+                show={showSidebar}
+                data={sidebarConfig}
+                onClose={toggleSidebar}
+            />
+        </React.Fragment>
+    )
+}
+
+async function getSideBarData() {
+    const response = await SidebarService.fetchSidebarLocal()
+        if (response && response.status === 200) {
+            return response.data;
+        } else {
+            console.error('No data for sidebar')
+            return []
+        }
 }
