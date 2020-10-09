@@ -45,6 +45,9 @@
             .button-container {
                 text-align: center;
                 button.login, button.signup {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                     background-color: #494D5F;
                     color: white;
                     margin: auto;
@@ -54,6 +57,17 @@
                     border-radius: 2px;
                 }
             }
+        }
+    }
+    .login-wrapper {
+        .orSignUp {
+            background-color: transparent;
+            border: none;
+            color: blue;
+            font-size: 18px;
+            text-decoration: none;
+            text-align: right;
+            display: inline-block;
         }
     }
 }

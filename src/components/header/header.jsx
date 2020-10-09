@@ -9,13 +9,13 @@ import { Sidebar } from "../side-bar/side-bar";
 // services
 import { SidebarService } from './../../services/sidebar-service';
 import { Link } from "react-router-dom";
-import {useState, useEffect} from 'react';
-
+import {useState, useEffect, useContext} from 'react';
+import AuthContext from './../../providers/auth-provider';
 export const Header = () => {
+    const Auth = useContext(AuthContext);
     const [showSidebar, setShowSidebar] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(Auth.isLoggedIn);
     const [sidebarConfig, setSidebarConfig] = useState(null);
-    const setRedirectToLogin = useState(false)[1];
     const UIBtnCSS = {
         "backgroundColor": "#494D5F",
         "color": "white",
@@ -33,6 +33,10 @@ export const Header = () => {
         caller()
     }, [])
 
+    useEffect(() => {
+        setIsLoggedIn(Auth.isLoggedIn)
+    }, [Auth.isLoggedIn])
+
     const toggleSidebar = () => {
         setShowSidebar(!showSidebar)
     }
@@ -41,10 +45,8 @@ export const Header = () => {
         console.log('clicked')
     }
 
-    const login = () => {
-        console.log('login')
-        setIsLoggedIn(true)
-        setRedirectToLogin(true)
+    const logout = () => {
+        Auth.logout()
     }
 
     return (
@@ -61,9 +63,11 @@ export const Header = () => {
                         <CartButton route={'/cart'} clickEvent={cartClickEvent} />
                         {
                         isLoggedIn ? 
-                        null : 
+                        <Link to="/" >
+                            <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logout} />
+                        </Link> : 
                         <Link to="/login" >
-                            <UiButton UIStyle={UIBtnCSS} text={'Login'} onBtnClick={login} />
+                            <UiButton UIStyle={UIBtnCSS} text={'Login'}/>
                         </Link>
                         }
                     </div>
