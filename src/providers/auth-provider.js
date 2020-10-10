@@ -1,19 +1,25 @@
 import React from 'react';
-import {firebaseInstance, firebaseAuth, googleAuthProvider, facebookAuthProvider} from './../config/firebase';
+import {firebaseInstance, firebaseAuth} from './../config/firebase';
 
 const AuthContext = React.createContext({isLoggedIn: false, currentUser: null});
 
+const googleProvider = new firebaseAuth.GoogleAuthProvider();
+const facebookProvider = new firebaseAuth.FacebookAuthProvider();
+
 const loginWithGoogle = () => {
-    return firebaseAuth().signInWithPopup(googleAuthProvider)
+    return firebaseAuth().signInWithPopup(googleProvider)
 }
 
 const loginWithFacebook = () => {
-    return firebaseAuth().signInWithPopup(facebookAuthProvider)
+    return firebaseAuth().signInWithPopup(facebookProvider)
 }
+
+const logout = () => firebaseAuth().signOut()
 export default AuthContext
 export {
     AuthContext,
     firebaseInstance,
     loginWithGoogle,
-    loginWithFacebook
+    loginWithFacebook,
+    logout
 } 

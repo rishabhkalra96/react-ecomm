@@ -10,12 +10,14 @@ import { Sidebar } from "../side-bar/side-bar";
 import { SidebarService } from './../../services/sidebar-service';
 import { Link } from "react-router-dom";
 import {useState, useEffect, useContext} from 'react';
-import AuthContext from './../../providers/auth-provider';
+import {AuthContext, logout} from './../../providers/auth-provider';
+import {useHistory} from 'react-router-dom'
 export const Header = () => {
     const Auth = useContext(AuthContext);
     const [showSidebar, setShowSidebar] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(Auth.isLoggedIn);
     const [sidebarConfig, setSidebarConfig] = useState(null);
+    const history = useHistory()
     const UIBtnCSS = {
         "backgroundColor": "#494D5F",
         "color": "white",
@@ -45,8 +47,10 @@ export const Header = () => {
         console.log('clicked')
     }
 
-    const logout = () => {
-        Auth.logout()
+    const logUserOut = async () => {
+        await logout()
+        history.push('/')
+
     }
 
     return (
@@ -63,9 +67,8 @@ export const Header = () => {
                         <CartButton route={'/cart'} clickEvent={cartClickEvent} />
                         {
                         isLoggedIn ? 
-                        <Link to="/" >
-                            <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logout} />
-                        </Link> : 
+                            <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logUserOut} />
+                        :
                         <Link to="/login" >
                             <UiButton UIStyle={UIBtnCSS} text={'Login'}/>
                         </Link>

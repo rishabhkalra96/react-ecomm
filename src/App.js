@@ -9,33 +9,23 @@ import {
   Route,
 } from "react-router-dom";
 import { useEffect, useState } from 'react'
-import AuthContext, { firebaseInstance } from './providers/auth-provider';
+import AuthContext from './providers/auth-provider';
+import { firebaseAuth } from './config/firebase';
 
 function App() {
-  const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null, logout: logOutUser })
+  const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
   useEffect(() => {
-    setupAuthListener()
-  },[])
-
-
-  function logOutUser() {
-    firebaseInstance.auth().signOut().then(() => { }).catch(err => {
-      console.log('error while logging out the user', err);
-    })
-  }
-
-
-  function setupAuthListener() {
-    firebaseInstance.auth().onAuthStateChanged((currentUser) => {
+    firebaseAuth().onAuthStateChanged((currentUser) => {
       if (!currentUser) {
         console.log('logged out');
-        setLoggedInDetails({ isLoggedIn: false, currentUser: null, logout: logOutUser })
+        setLoggedInDetails({ isLoggedIn: false, currentUser: null})
       } else {
         console.log('user logged in')
-        setLoggedInDetails({ isLoggedIn: true, currentUser, logout: logOutUser })
+        setLoggedInDetails({ isLoggedIn: true, currentUser })
       }
     })
-  }
+  },[])
+
   return (
     <AuthContext.Provider value={{ ...loggedInDetails }}>
       <div className="App">
