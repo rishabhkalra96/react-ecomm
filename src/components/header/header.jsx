@@ -67,12 +67,17 @@ export const Header = () => {
                         <CartButton route={'/cart'} clickEvent={cartClickEvent} />
                         {
                         isLoggedIn ? 
+                            (
                             <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logUserOut} />
+                            )
                         :
                         <Link to="/login" >
                             <UiButton UIStyle={UIBtnCSS} text={'Login'}/>
                         </Link>
                         }
+                        {isLoggedIn ? <Link to="/home">
+                        <UiButton UIStyle={UIBtnCSS} text={'Home'}/>
+                        </Link> : null}
                     </div>
                 </section>
             </div>

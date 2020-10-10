@@ -42,7 +42,7 @@ export const Login = (props) => {
                 setMessage('Successfully logged in')
                 setOpen(true)
                 formHook.setFormData({})
-                history.push('/')
+                history.push('/home')
             } catch(error) {
                 console.error('Error occured while logginf in ', error)
             }
@@ -56,6 +56,7 @@ export const Login = (props) => {
             console.log('recieved response as ', response)
             setMessage('Successfully logged in via google')
             setOpen(true)
+            history.push('/home')
         } catch (error) {
             console.log('error while google sign in', error)
         }

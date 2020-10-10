@@ -5,15 +5,18 @@ import { Header } from './components/header/header';
 import { ContentBody } from './components/content-body/content-body';
 import { Login } from './components/login/login';
 import {
-  BrowserRouter as Router,
   Route,
+  BrowserRouter as Router,
 } from "react-router-dom";
 import { useEffect, useState } from 'react'
 import AuthContext from './providers/auth-provider';
 import { firebaseAuth } from './config/firebase';
+import { ProtectedRoute } from './components/protected-router/protected-router';
+import {Home} from './components/home/home'
 
 function App() {
   const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
+
   useEffect(() => {
     firebaseAuth().onAuthStateChanged((currentUser) => {
       if (!currentUser) {
@@ -30,7 +33,7 @@ function App() {
     <AuthContext.Provider value={{ ...loggedInDetails }}>
       <div className="App">
         <Router>
-          <Header />
+        <Header />
           <Route exact path="/">
             <ContentBody />
           </Route>
@@ -40,6 +43,7 @@ function App() {
           <Route exact path="/signup">
             <Login formType='signup' />
           </Route>
+          <ProtectedRoute path="/home" component={Home}/>
         </Router>
       </div>
     </AuthContext.Provider>
