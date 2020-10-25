@@ -23,9 +23,9 @@ export const ContentBody = () => {
     const getCategories = () => {
         return (
             <React.Fragment>
-                <CardCarousel title={'Recommended Items'} />
-                <CardCarousel title={'Best Selling'} />
-                <CardCarousel title={'Recently Added'} />
+                <CardCarousel title={'Recommended Items'} items={[1,2,3,4,5,6,7,8,9]}/>
+                <CardCarousel title={'Best Selling'}  items={[1,2,3,4,5,6,7,8,9]}/>
+                <CardCarousel title={'Recently Added'}  items={[1,2,3,4,5,6,7,8,9]}/>
             </React.Fragment>
         )
     }

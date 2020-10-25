@@ -19,3 +19,16 @@
     color: #494D5F;
 }
 
+.carousel-looper {
+    box-sizing: content-box;
+    display: flex;
+    /* overflow-x: hidden; */
+    overflow-y: hidden;
+    padding: 5px;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none; 
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
