@@ -430,7 +430,7 @@ export const ContentBodyService = {
                 height: imageObj.height,
                 width: imageObj.width,
                 id: imageObj.id,
-                url: imageObj.urls.custom || imageObj.urls.full || imageObj.urls.raw || null,
+                url: 'https://firebasestorage.googleapis.com/v0/b/react-ecomm-61f67.appspot.com/o/2853.jpg?alt=media&token=81c8fb99-2c75-4a6e-adc2-a4d4385ec363',
                 routeTo: route || data.routeTo || null
             }
         })
