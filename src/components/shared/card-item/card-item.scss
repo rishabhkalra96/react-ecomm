@@ -2,8 +2,14 @@
     padding: 10px;
     width: 350px;
     height: 450px;
+    transition:0.3s;
+    &:hover {
+        transform: scale(1.1);
+    }
 }
 .cardItem-container {
+    display: flex;
+    flex-direction: column;
     width: 320px;
     height: 100%;
     margin: auto;
@@ -12,5 +18,12 @@
     transition: box-shadow 0.5s ease-out;
     &:hover {
         box-shadow: 11px 10px 23px -4px rgba(212,212,212,1);
+    }
+    .cardItem-card-body {
+        padding: 10px;
+        height: inherit;
+    }
+    .cardItem-card-body-creator {
+        font-size: 0.8rem;
     }
 }

@@ -1,0 +1,18 @@
+.ratings-core {
+    display: flex;
+    .ratings-count {
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        margin-left: 3px;
+        color: rgb(131, 131, 131);
+    }
+    .filled {
+        color: #FDD835;
+    }
+    .ratings-removal {
+        padding-left: 3px;
+        font-size: 0.8rem;
+        padding-top: 2px;
+    }
+}
