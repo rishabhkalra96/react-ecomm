@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import 'firebase/storage'
 const firebaseConfig = {
     apiKey: "AIzaSyBq_JwdnMOW94QzFs8N1I27HoRw1yG-KII",
     authDomain: "react-ecomm-61f67.firebaseapp.com",
@@ -10,13 +11,22 @@ const firebaseConfig = {
     measurementId: "G-VM9HPE8ER8"
   };
 const firebaseInstance = firebase.initializeApp(firebaseConfig);
+firebase.analytics()
 const firebaseAuth = firebase.auth
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
+const fbStorageCore = firebase.storage()
+const firebaseDB = firebase.firestore()
+const storageRef = fbStorageCore.ref()
+const FBstorage = {
+  imageRef: storageRef.child('images'),
+}
 
 export {
   firebaseInstance,
   firebaseAuth,
   googleAuthProvider,
   facebookAuthProvider,
+  FBstorage,
+  firebaseDB
 }

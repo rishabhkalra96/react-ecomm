@@ -10,15 +10,12 @@ export const ContentBody = () => {
     const [bannerUrls, setBannerUrls] = useState([]);
 
     useEffect(() => {
-        const urls = ContentBodyService.slideUrls()
-        setBannerUrls(urls)
+        const asyncHandler = async () => {
+            const urlObjects = await ContentBodyService.getBannerImages()
+            setBannerUrls(urlObjects)
+        }
+        asyncHandler()
     }, [])
-
-    const getBannerTemplates = (urls) => {
-        return urls.map((url, idx) => {
-            return <SlideShow source={url} key={"slider_" + idx} />
-        })
-    }
 
     const getCategories = () => {
         return (
@@ -33,7 +30,7 @@ export const ContentBody = () => {
     return (
         <React.Fragment>
             <div className="content-container">
-                {bannerUrls.length && getBannerTemplates(bannerUrls)}
+                {bannerUrls.length && <SlideShow source={bannerUrls} />}
                 {getCategories()}
             </div>
         </React.Fragment>

@@ -1,5 +1,4 @@
 import React from 'react'
-import {ContentBodyService} from './../../../services/content-body-service'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
 
@@ -18,14 +17,11 @@ export default class slideShow extends React.Component {
     async componentDidMount() {
         if (this.props.source) {
             try {
-                const response = await ContentBodyService.fetchSliderImages(this.props.source, true)
-                if (Array.isArray(response) && response.length) {
-                    const parsedImages = ContentBodyService.parseResponseForSliders(response)
-                    const template = this.getSlider(parsedImages)
+                debugger
+                    const template = this.getSlider(this.props.source)
                         this.setState({
                             sliderTemplate: template
                         })
-                }
             } catch(sliderErr) {
                 console.error('An error occured while rendering slider using the url ' + this.props.source)
             }
@@ -53,7 +49,7 @@ export default class slideShow extends React.Component {
                     {...option}
                     >
             {images.map(image => {
-                let color= {backgroundColor : image.color}
+                let color= {backgroundColor : image.hasOwnProperty('color') ? image.color : 'black'}
             return <div 
             className="carousel-image-container" style= {color}
             key={image.id}
