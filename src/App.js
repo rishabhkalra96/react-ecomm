@@ -13,7 +13,8 @@ import AuthContext from './providers/auth-provider';
 import { firebaseAuth } from './config/firebase';
 import { ProtectedRoute } from './components/protected-router/protected-router';
 import {Home} from './components/home/home'
-
+// import { ContentBodyService } from './services/content-body-service';
+// const dumpData = require('./dump/clothe_Sample.json');
 function App() {
   const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
 
@@ -25,6 +26,7 @@ function App() {
       } else {
         console.log('user logged in')
         setLoggedInDetails({ isLoggedIn: true, currentUser })
+        // ContentBodyService.utilities.populateDatabase(dumpData)
       }
     })
   },[])

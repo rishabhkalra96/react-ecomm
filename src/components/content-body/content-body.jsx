@@ -8,21 +8,35 @@ import { useState } from 'react';
 export const ContentBody = () => {
 
     const [bannerUrls, setBannerUrls] = useState([]);
+    const [bodyStrips, setBodyStrips] = useState([]);
 
     useEffect(() => {
-        const asyncHandler = async () => {
-            const urlObjects = await ContentBodyService.getBannerImages()
-            setBannerUrls(urlObjects)
+        const asyncHandler = async (cb, setter, args) => {
+            if (args) {
+                const Objects = await cb(args)
+                console.log('objects are ', Objects)
+                setter(Objects)
+            } else {
+                const Objects = await cb()
+                setter(Objects)
+            }
         }
-        asyncHandler()
+        asyncHandler(ContentBodyService.getBannerImages, setBannerUrls)
+        asyncHandler(ContentBodyService.getBodyStrips, setBodyStrips, ['Recommended Items', 'Best Selling', 'Recently Added'])
     }, [])
+
+    useEffect(() => {
+        console.log('body strips are ', bodyStrips)
+    }, [bodyStrips])
 
     const getCategories = () => {
         return (
             <React.Fragment>
-                <CardCarousel title={'Recommended Items'} items={[1,2,3,4,5,6,7,8,9]}/>
-                <CardCarousel title={'Best Selling'}  items={[1,2,3,4,5,6,7,8,9]}/>
-                <CardCarousel title={'Recently Added'}  items={[1,2,3,4,5,6,7,8,9]}/>
+                {
+                    bodyStrips.length ? 
+                    bodyStrips.map((strip,i) => <CardCarousel title={strip.category_name} items={strip.items} key={i}/>)
+                    : null
+                }
             </React.Fragment>
         )
     }

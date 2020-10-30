@@ -33,7 +33,7 @@ useEffect(() => {
           <UiButton UIStyle={actionBtnCss} text={'View More'} onBtnClick={viewAll} />
           </div>
           <div className="carousel-looper">
-            {cards.map(v => <CardItem key={v}/>)}
+            {cards.map((v,i) => <CardItem item={v} key={i}/>)}
           </div>
       </div>
   )

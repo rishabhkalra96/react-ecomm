@@ -16,6 +16,15 @@
     background-color: white;
     cursor: pointer;
     transition: box-shadow 0.5s ease-out;
+    .cardItem-card-top {
+        .cardItem-card-top-macro {
+            img {
+                width: 100%;
+                height: 218px;
+                object-fit: fill;
+            }
+        }
+    }
     .cardItem-card-body {
         padding: 10px;
         height: inherit;

@@ -7,19 +7,33 @@ import Ratings from './../ratings/ratings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 
-export default function CardItem(props) {
+export default function CardItem({item}) {
     const [productImage, setProductImage] = useState(defaultImage)
+    const [product, setProduct] = useState(null)
 
     useEffect(() => {
-        if (props.imageUrl) {
-            setProductImage(props.imageUrl)
+        if (item) {
+            setProduct(item)
+            if (item.image_url) {
+                setProductImage(item.image_url)
+            }
         }
 
-    }, [props.imageUrl])
+    }, [item])
 
     const handleHover = (e) => {
         e.preventDefault()
         // start the slideshow and make the images full width
+    }
+
+    const getDiscountedPrice = (original, percentageForDiscount) => {
+        try {
+            const numOrignal = parseInt(original, 10)
+            const percentage = parseInt(percentageForDiscount, 10)
+            return numOrignal - (percentage / 100)*numOrignal
+        } catch (e) {
+            return 'NA'
+        }
     }
 
     const handleRatingsClick = (e) => {
@@ -31,31 +45,31 @@ export default function CardItem(props) {
                 <div className="cardItem-card-top">
                     <div className="cardItem-card-top-micro"></div>
                     <div className="cardItem-card-top-macro">
-                        <img src={productImage} alt="product-representation"/>
+                        <img src={productImage} alt={product ? product.name : ''}/>
                     </div>
                 </div>
                 <div className="cardItem-card-body">
                         <p className="cardItem-card-body-desc">
-                        <b>A perfect image for your home</b>
+                        <b>{product? product.name : null}</b>
                         </p>
                     <p className="cardItem-card-body-creator">
-                        <span>By </span> Artistic Boys
+                        <span>By </span> {product ? product.owner_details.created_by : null}
                     </p>
                     <div className="cardItem-ratings">
                         <Ratings count={5} filled={Math.floor((Math.random() * 5) + 1)} hoverEffect={true} ratingsCount={Math.floor((Math.random() * 500) + 1)} clickHandler={handleRatingsClick}/>
                     </div>
                     <div className="cartItem-desc">
                         <p>
-                            This is a body description for the content which can be very long, is it really supposed to be that long ? so in that case we have to trim the extra data that is overflowing. i dont know what to do
+                            {product ? product.short_description : null}
                         </p>
                     </div>
                     <div className="cartItem-price-container">
                         <p className="price-core">
                             <span className="currency-code">Rs.</span>
-                            200
+                            {product ? getDiscountedPrice(product.pricing_details.min, product.pricing_details.max_discount) : null}
                             <span className="pre-discount">
                             <span className="currency-code">Rs.</span>
-                            300
+                            {product ? product.pricing_details.min: null}
                             </span>
                         </p>
                         <div className="cart-container">

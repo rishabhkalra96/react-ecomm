@@ -17,7 +17,6 @@ export default class slideShow extends React.Component {
     async componentDidMount() {
         if (this.props.source) {
             try {
-                debugger
                     const template = this.getSlider(this.props.source)
                         this.setState({
                             sliderTemplate: template
