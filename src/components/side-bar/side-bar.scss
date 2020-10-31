@@ -6,13 +6,13 @@
     height: 100%;
     background-color: rgba(71, 71, 71, 0.5);
     z-index: 100;
-    transition: 1s ease-out;
+    transition: 0.4s ease-out;
     display:none;
 }
 
 .sidebar-backdrop.show {
     display: block;
-    transition: 0.6s ease-in;
+    transition: 0.4s ease-in;
 }
 
 .sidebar-container {

@@ -1,8 +1,14 @@
 export const coreService = (() => {
-    const _api = () => {
-        alert('helo worl')
+    const asyncHandler = async (cb, setter, ...args) => {
+        if (args) {
+            const Objects = await cb(...args)
+            setter(Objects)
+        } else {
+            const Objects = await cb()
+            setter(Objects)
+        }
     }
     return {
-        api: _api
+        asyncHandler
     }
 })()

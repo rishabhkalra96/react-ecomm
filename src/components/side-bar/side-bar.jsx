@@ -1,8 +1,16 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './side-bar.scss';
 import CloseBtn from './../shared/close-btn/close-btn.jsx';
 import ProfileBtn from './../shared/profile-btn/profile-btn.jsx';
+import {AuthContext} from './../../providers/auth-provider'
+
 export const Sidebar = (props) => {
+    const Auth = useContext(AuthContext)
+    const [userLoggedIn, setUserLoggedIn] = useState(false)
+
+    useEffect(() => {
+        setUserLoggedIn(Auth.isLoggedIn)
+    }, [Auth.isLoggedIn])
 
     let backdropClasses = ''
         let sidebarClasses = 'sidebar-container'
@@ -42,7 +50,7 @@ export const Sidebar = (props) => {
                         <div className="title-content-wrapper flex-item item-center">
                         <ProfileBtn />
                         <p className="title-content">
-                            {'Hi, Yashneet'}
+                            {userLoggedIn ? `Hi, ${Auth.currentUser?.displayName}`: 'Not Logged In'}
                         </p>
                         </div>
                     </div>

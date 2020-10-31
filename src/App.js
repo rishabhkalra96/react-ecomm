@@ -13,6 +13,7 @@ import AuthContext from './providers/auth-provider';
 import { firebaseAuth } from './config/firebase';
 import { ProtectedRoute } from './components/protected-router/protected-router';
 import {Home} from './components/home/home'
+import {ProductDescription} from './components/product-description/product-description'
 
 function App() {
   const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
@@ -45,6 +46,9 @@ function App() {
             <Login formType='signup' />
           </Route>
           <ProtectedRoute path="/home" component={Home}/>
+          <Route path="/product/:productID">
+            <ProductDescription />
+          </Route>
         </Router>
       </div>
     </AuthContext.Provider>

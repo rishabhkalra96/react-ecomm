@@ -36,7 +36,7 @@ async function populateDatabase(dumpData) {
         return stripNames.map(name => {
           return {
             category_name: name,
-            items: doc.docs.map(d => d.data())
+            items: doc.docs.map(d => ({...d.data(), id: d.id}))
           }
         })
       } else {

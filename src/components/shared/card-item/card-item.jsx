@@ -7,7 +7,7 @@ import Ratings from './../ratings/ratings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 
-export default function CardItem({item}) {
+export default function CardItem({item, onCardClick}) {
     const [productImage, setProductImage] = useState(defaultImage)
     const [product, setProduct] = useState(null)
 
@@ -39,8 +39,9 @@ export default function CardItem({item}) {
     const handleRatingsClick = (e) => {
         console.log('clicked on ratings', e)
     }
+
     return (
-        <div className="cardItem-wrapper" onMouseOver={handleHover}>
+        <div className="cardItem-wrapper" onMouseOver={handleHover} onClick={() => onCardClick(item)}>
             <div className="cardItem-container">
                 <div className="cardItem-card-top">
                     <div className="cardItem-card-top-micro"></div>

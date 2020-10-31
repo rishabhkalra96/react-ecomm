@@ -4,34 +4,13 @@ import { Carousel } from 'react-responsive-carousel';
 
 import './slide-show.scss'
 
-export default class slideShow extends React.Component {
+export const SlideShow = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentSlide: 0,
-            sliderTemplate: null,
-        }
+    function visitSlideRoute(image) {
+        console.log('image clicked is ', image.route_to)
     }
 
-    async componentDidMount() {
-        if (this.props.source) {
-            try {
-                    const template = this.getSlider(this.props.source)
-                        this.setState({
-                            sliderTemplate: template
-                        })
-            } catch(sliderErr) {
-                console.error('An error occured while rendering slider using the url ' + this.props.source)
-            }
-        }
-    }
-
-    visitSlideRoute = (image) => {
-        console.log('image clicked is ', image)
-    }
-
-    getSlider = (images) => {
+    const getSlider = (images) => {
         const option = {
             showIndicators: false,
             autoPlay: true,
@@ -44,29 +23,26 @@ export default class slideShow extends React.Component {
             swipeable: true,
             emulateTouch: true,
         }
-        return <Carousel 
-                    {...option}
+        return <Carousel {...option}>
+            {
+                images.map(image => {
+                    let color = { backgroundColor: image.hasOwnProperty('color') ? image.color : 'black' }
+                    return <div
+                        className="carousel-image-container" style={color}
+                        key={image.id}
+                        onClick={() => visitSlideRoute(image)}
                     >
-            {images.map(image => {
-                let color= {backgroundColor : image.hasOwnProperty('color') ? image.color : 'black'}
-            return <div 
-            className="carousel-image-container" style= {color}
-            key={image.id}
-            onClick={() => this.visitSlideRoute(image)}
-            >
-                <img src={image.url} alt={`banner_image ${image.alt}`} />
-            </div>
-        })}
+                        <img src={image.url} alt={`banner_image ${image.alt}`} />
+                    </div>
+                })}
         </Carousel>
     }
-    render() {
-        return (
-            this.props?.source &&
-            <div className="slideshow-container">
-                <div className="slideshow-wrapper">
-                    {this.state.sliderTemplate}
-                </div>
+    return (
+        props?.source ?
+        <div className="slideshow-container">
+            <div className="slideshow-wrapper">
+                {getSlider(props.source)}
             </div>
-        )
-    }
+        </div> : null
+    )
 }
