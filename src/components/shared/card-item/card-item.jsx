@@ -6,6 +6,7 @@ import defaultImage from './image_NA.png'
 import Ratings from './../ratings/ratings'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
+import {ContentBodyService} from './../../../services/content-body-service'
 
 export default function CardItem({item, onCardClick}) {
     const [productImage, setProductImage] = useState(defaultImage)
@@ -26,16 +27,6 @@ export default function CardItem({item, onCardClick}) {
         // start the slideshow and make the images full width
     }
 
-    const getDiscountedPrice = (original, percentageForDiscount) => {
-        try {
-            const numOrignal = parseInt(original, 10)
-            const percentage = parseInt(percentageForDiscount, 10)
-            return numOrignal - (percentage / 100)*numOrignal
-        } catch (e) {
-            return 'NA'
-        }
-    }
-
     const handleRatingsClick = (e) => {
         console.log('clicked on ratings', e)
     }
@@ -46,7 +37,7 @@ export default function CardItem({item, onCardClick}) {
                 <div className="cardItem-card-top">
                     <div className="cardItem-card-top-micro"></div>
                     <div className="cardItem-card-top-macro">
-                        <img src={productImage} alt={product ? product.name : ''}/>
+                        <img loading="lazy" src={productImage} alt={product ? product.name : ''}/>
                     </div>
                 </div>
                 <div className="cardItem-card-body">
@@ -67,7 +58,7 @@ export default function CardItem({item, onCardClick}) {
                     <div className="cartItem-price-container">
                         <p className="price-core">
                             <span className="currency-code">Rs.</span>
-                            {product ? getDiscountedPrice(product.pricing_details.min, product.pricing_details.max_discount) : null}
+                            {product ? ContentBodyService.utilities.getDiscountedPrice(product.pricing_details.min, product.pricing_details.max_discount) : null}
                             <span className="pre-discount">
                             <span className="currency-code">Rs.</span>
                             {product ? product.pricing_details.min: null}

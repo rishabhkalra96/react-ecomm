@@ -1,0 +1,30 @@
+.product-container {
+    width: 100%;
+    margin: auto;
+    display: flex;
+    min-height: 93%;
+    background-color: whitesmoke;
+    .product-container-inner {
+        display: flex;
+        width: 100%;
+        padding: 20px;
+        .product-section-left, .product-section-right {
+            width: 50%;
+            height: 100%;
+        }
+        .product-section-left {
+            background-color: lightgrey;
+
+        }
+        .product-section-right {
+            background-color: darkgrey;
+            .container {
+                padding: 10px;
+                background-color: white;
+                height: 100%;
+                color: black;
+            }
+        }
+
+    }
+}

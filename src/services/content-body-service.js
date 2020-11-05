@@ -47,10 +47,21 @@ async function populateDatabase(dumpData) {
     }
   }
 
+  const getDiscountedPrice = (original, percentageForDiscount) => {
+    try {
+        const numOrignal = parseInt(original, 10)
+        const percentage = parseInt(percentageForDiscount, 10)
+        return numOrignal - (percentage / 100)*numOrignal
+    } catch (e) {
+        return 'NA'
+    }
+}
+
 export const ContentBodyService = {
     getBannerImages: async () => await getRemoteBannerImages(),
     utilities: {
         populateDatabase,
+        getDiscountedPrice
     },
     getBodyStrips: _getBodyStrips
 }
