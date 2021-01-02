@@ -1,11 +1,17 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from 'react-responsive-carousel';
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton';
 
 import './slide-show.scss'
 
 export const SlideShow = (props) => {
 
+    const [bannerImages, setBannerImages] = useState([])
+
+    useEffect(() =>{
+        setBannerImages(props.source || [])
+    }, [props.source])
     function visitSlideRoute(image) {
         console.log('image clicked is ', image.route_to)
     }
@@ -38,11 +44,14 @@ export const SlideShow = (props) => {
         </Carousel>
     }
     return (
-        props?.source ?
+        bannerImages.length ? 
         <div className="slideshow-container">
             <div className="slideshow-wrapper">
-                {getSlider(props.source)}
+                {getSlider(bannerImages)}
             </div>
-        </div> : null
+        </div>
+        : <SkeletonTheme color={'#f1eff1'} highlighColor={'white'}>
+            <Skeleton width={'100%'} height={'400px'}/>
+            </SkeletonTheme>
     )
 }

@@ -1,11 +1,11 @@
 export const coreService = (() => {
     const asyncHandler = async (cb, setter, ...args) => {
         if (args) {
-            const Objects = await cb(...args)
-            setter(Objects)
+            const response = await cb(...args)
+            setter(response)
         } else {
-            const Objects = await cb()
-            setter(Objects)
+            const response = await cb()
+            setter(response)
         }
     }
     return {

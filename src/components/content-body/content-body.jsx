@@ -15,16 +15,13 @@ export const ContentBody = () => {
         coreService.asyncHandler(ContentBodyService.getBodyStrips, setBodyStrips, ['Recommended Items', 'Best Selling', 'Recently Added'])
     }, [])
 
-    useEffect(() => {
-    }, [bodyStrips])
-
     const getCategories = () => {
         return (
             <React.Fragment>
                 {
                     bodyStrips.length ? 
                     bodyStrips.map((strip,i) => <CardCarousel title={strip.category_name} items={strip.items} key={i}/>)
-                    : null
+                    : <CardCarousel title={undefined} items={undefined} />
                 }
             </React.Fragment>
         )
@@ -33,7 +30,7 @@ export const ContentBody = () => {
     return (
         <React.Fragment>
             <div className="content-container">
-                {bannerUrls.length && <SlideShow source={bannerUrls} />}
+                <SlideShow source={bannerUrls} />
                 {getCategories()}
             </div>
         </React.Fragment>

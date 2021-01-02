@@ -1,25 +1,23 @@
-import React, {useState, useEffect} from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { ContentBodyService } from './../../services/content-body-service'
+import { coreDBService } from './../../services/core-db-service'
+import { getProductReviews } from './../../services/product-description-service'
+import { coreService } from './../../services/core-service'
+import { CustomAccordion } from './../custom-accordion/custom-accordion'
 import './product-description.scss'
-import {useParams} from 'react-router-dom' 
-import {coreService} from './../../services/core-service'
-import {coreDBService} from './../../services/core-db-service'
-import {ContentBodyService} from './../../services/content-body-service'
-import {CustomAccordion} from './../custom-accordion/custom-accordion'
-const customItems = [
-    {
-        name: 'Some name',
-        text: 'this is the text that i want to dispay, now its your wish what you wanna do about it'
-    }
-]
+
 export const ProductDescription = () => {
     const [productID] = useState(useParams().productID)
     const [currentProduct, setCurrentProduct] = useState(null)
     const [fetchingStatus, setFetchingStatus] = useState(true)
+    const [productReviews, setProductReviews] = useState('fetching')
 
     useEffect(() => {
         // get all details of current product
         if (productID) {
             coreService.asyncHandler(coreDBService.getProductDetailsByID, setCurrentProduct, productID)
+            coreService.asyncHandler(getProductReviews, setProductReviews, productID)
         }
     }, [productID])
 
@@ -35,26 +33,55 @@ export const ProductDescription = () => {
         return (
             <div className="product-container-inner">
                 <div className="product-section-left">
-                {JSON.stringify(currentProduct)}
+                    <div className="product-main-image-container w-full h-full">
+                        <img className="img-obj w-full h-max-90" alt="product" src={currentProduct.image_url} />
+                    </div>
                 </div>
                 <div className="product-section-right">
                     <div className="container">
-                      <p className="product-name">
-                          {currentProduct.name}
-                      </p>
-                      <p className="product-owner">
-                          by {currentProduct.owner_details.created_by}
-                      </p>
-                      <div className="product-discount-price">
-                          <p>
-                          Rs. {ContentBodyService.utilities.getDiscountedPrice(currentProduct.pricing_details.min, currentProduct.pricing_details.max_discount)}
-                          </p>
-        <span> after {currentProduct.pricing_details.max_discount} % discount</span>
-                      </div>
-                      <p className="product-original-price">
-                        Orignal Retail price : Rs. {currentProduct.pricing_details.min}
-                          </p>
-                          <CustomAccordion items={customItems}/>
+                        <div className="owner-container mb-5">
+                            <p className="product-name inline text-4xl">
+                                {currentProduct.name}
+                            </p>
+                            <p className="product-owner inline ml-2">
+                                by {currentProduct.owner_details.created_by}
+                            </p>
+                        </div>
+                        <div className="product-discount-price">
+                            <p className="inline mb-3">
+                                Price Rs.{ContentBodyService.utilities.getDiscountedPrice(currentProduct.pricing_details.min, currentProduct.pricing_details.max_discount)}
+                                <span> after {currentProduct.pricing_details.max_discount} % discount</span>
+                            </p>
+                        </div>
+                        <p className="product-original-price">
+                            Orignal Retail price : Rs. {currentProduct.pricing_details.min}
+                        </p>
+                        {
+                            currentProduct.fullfilled_by ?
+                                <p className="product-fullfillment">
+                                    Fullfilled by : {currentProduct.fullfilled_by ? currentProduct.fullfilled_by.name : 'NA'}
+                                </p> : null
+                        }
+                        <section className="expansion-container">
+                        {
+                                currentProduct.long_description ?
+                                <div className="product-long-description">
+                            <CustomAccordion items={[{ name: 'Description', text: currentProduct.long_description, type: 'normal' }]} /> 
+                        </div> : null
+                            }
+                        {
+                            currentProduct.has_specifications ?
+                                <div className="product-specificatons">
+                                    <CustomAccordion items={[{ name: 'Specifications', data: currentProduct.specifications, type: 'table' }]} />
+                                </div> : null
+                        }
+                        {
+                                currentProduct.has_reviews ?
+                                <div className="product-reviews">
+                            <CustomAccordion items={[{ name: 'Reviews', reviews: productReviews[0], type: 'reviews' }]} /> 
+                        </div> : null
+                            }
+                        </section>
                     </div>
                 </div>
             </div>
@@ -67,10 +94,10 @@ export const ProductDescription = () => {
         }
         return <div className="product-container">
             {
-                currentProduct && currentProduct.ok && currentProduct.status === 200 ? 
-                getProductTemplate(currentProduct.data) : null
+                currentProduct && currentProduct.ok && currentProduct.status === 200 ?
+                    getProductTemplate(currentProduct.data) : null
             }
-    </div>
+        </div>
     }
 
 

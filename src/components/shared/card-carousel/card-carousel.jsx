@@ -4,7 +4,8 @@ import "slick-carousel/slick/slick-theme.css";
 import './card-carousel.scss';
 import CardItem from './../card-item/card-item';
 import { UiButton } from './../../ui-button/ui-btn.jsx';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
 
 
 export const CardCarousel = (props) => {
@@ -36,12 +37,16 @@ const viewAll = () => {
     return (
       <div className="card-carousel-slick">
           <div className="extra-information">
-          <p className="card-carousel-title">{ props.hasOwnProperty('title') ? props.title : 'New Categories' }</p>
-          <UiButton UIStyle={actionBtnCss} text={'View More'} onBtnClick={viewAll} />
+          <p className="card-carousel-title"> {props.title || <Skeleton width={'100%'} height={'50px'}/>} </p>
+          {cards.length ? <UiButton UIStyle={actionBtnCss} text={'View More'} onBtnClick={viewAll}/> : <Skeleton width={'6rem'} height={'2.5rem'}/> }
           </div>
           <div className="carousel-looper">
-            {cards.map((v,i) => <CardItem item={v} key={i} onCardClick={cardClickHandler}/>)}
+            {
+              cards.length ?
+            cards.map((v,i) => <CardItem item={v} key={i} onCardClick={cardClickHandler}/>) :
+            <Skeleton/>
+          }
           </div>
       </div>
-  )
+    )
 }
