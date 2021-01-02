@@ -57,6 +57,25 @@ async function populateDatabase(dumpData) {
     }
 }
 
+/* const _runSample = async () => {
+  const docs = await (await db.collection('inventory').get()).docs.map(d => ({...d.data(), id: d.id}))
+  const newDocs = docs.filter(d => !d.hasOwnProperty('has_reviews')).map(data => {
+    data['has_reviews'] = true
+      return data;
+  })
+  const promises = newDocs.map(d => {
+    const dataToStore = {...d};
+    delete dataToStore.id;
+    return db.collection('inventory').doc(d.id).update({...dataToStore})
+  })
+  try {
+    const response = await Promise.all(promises)
+    console.log('all ok', response)
+  } catch (err) {
+    console.log('error occured ', err)
+  }
+} */
+
 export const ContentBodyService = {
     getBannerImages: async () => await getRemoteBannerImages(),
     utilities: {

@@ -14,6 +14,7 @@ import { firebaseAuth } from './config/firebase';
 import { ProtectedRoute } from './components/protected-router/protected-router';
 import {Home} from './components/home/home'
 import {ProductDescription} from './components/product-description/product-description'
+import {AddProduct} from './components/add-product/add-product'
 
 function App() {
   const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
@@ -46,6 +47,7 @@ function App() {
             <Login formType='signup' />
           </Route>
           <ProtectedRoute path="/home" component={Home}/>
+          <ProtectedRoute path="/products/add" component={AddProduct}/>
           <Route path="/product/:productID">
             <ProductDescription />
           </Route>
