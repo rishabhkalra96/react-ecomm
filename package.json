@@ -23,7 +23,8 @@
     "react-scripts": "3.4.1",
     "react-slick": "^0.27.0",
     "slick-carousel": "^1.8.1",
-    "tailwindcss": "^1.5.1"
+    "tailwindcss": "^1.5.1",
+    "uniqid": "^5.2.0"
   },
   "scripts": {
     "build:tailwind": "tailwind build src/tailwind.css -o src/tailwind.output.css",

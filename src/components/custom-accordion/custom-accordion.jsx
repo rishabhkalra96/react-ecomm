@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
             </AccordionDetails>
     }
     if (item.type === 'reviews' && item.reviews) {
-      if (item.reviews.reviews.length) {
+      if (item.reviews && Array.isArray(item.reviews.reviews) && item.reviews.reviews.length) {
         const reviewArray = item.reviews.reviews
         const reviewTemplateArray = reviewArray.map((mainReview,i) => {
           const accordionTemplate = <AccordionDetails key={i}>
@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
       </AccordionDetails>
 return accordionTemplate
         })
-        debugger
         return reviewTemplateArray;
       }
     return <p className="p-5">No {item.name} available</p>

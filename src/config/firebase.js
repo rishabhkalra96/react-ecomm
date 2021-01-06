@@ -28,5 +28,6 @@ export {
   googleAuthProvider,
   facebookAuthProvider,
   FBstorage,
-  firebaseDB
+  firebaseDB,
+  storageRef,
 }

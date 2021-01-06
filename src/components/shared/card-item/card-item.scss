@@ -8,6 +8,18 @@
     }
 }
 .cardItem-container {
+    // this is for ghost element
+    span:first-child {
+        // display: block;
+        height: 100%;
+        span {
+            display: block;
+            height: 100%;
+        }
+    }
+    span.currency-code:first-child {
+        display: inline;
+    }
     display: flex;
     flex-direction: column;
     width: 320px;

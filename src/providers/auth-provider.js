@@ -3,6 +3,15 @@ import {firebaseInstance, firebaseAuth} from './../config/firebase';
 
 const AuthContext = React.createContext({isLoggedIn: false, currentUser: null});
 
+const getbasicUserObject = (currentUser) => {
+    debugger
+    return {
+        email: currentUser.email,
+        id: currentUser.uid,
+        name: currentUser.displayName,
+    }
+}
+
 const googleProvider = new firebaseAuth.GoogleAuthProvider();
 const facebookProvider = new firebaseAuth.FacebookAuthProvider();
 
@@ -21,5 +30,6 @@ export {
     firebaseInstance,
     loginWithGoogle,
     loginWithFacebook,
-    logout
+    logout,
+    getbasicUserObject,
 } 

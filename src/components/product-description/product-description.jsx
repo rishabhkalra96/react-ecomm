@@ -78,7 +78,7 @@ export const ProductDescription = () => {
                         {
                                 currentProduct.has_reviews ?
                                 <div className="product-reviews">
-                            <CustomAccordion items={[{ name: 'Reviews', reviews: productReviews[0], type: 'reviews' }]} /> 
+                            <CustomAccordion items={[{ name: 'Reviews', reviews: productReviews.length ? productReviews[0] : {}, type: 'reviews' }]} /> 
                         </div> : null
                             }
                         </section>
