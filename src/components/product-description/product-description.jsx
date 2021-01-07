@@ -6,6 +6,7 @@ import { getProductReviews } from './../../services/product-description-service'
 import { coreService } from './../../services/core-service'
 import { CustomAccordion } from './../custom-accordion/custom-accordion'
 import './product-description.scss'
+import Button from '@material-ui/core/Button';
 
 export const ProductDescription = () => {
     const [productID] = useState(useParams().productID)
@@ -82,6 +83,10 @@ export const ProductDescription = () => {
                         </div> : null
                             }
                         </section>
+                        <div className="flex justify-center my-5 button-container">
+                            <Button className="mr-4" variant="contained" color="secondary">Add to Cart</Button>
+                            <Button variant="contained" color="primary">Buy Now</Button>
+            </div>
                     </div>
                 </div>
             </div>

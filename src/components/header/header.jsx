@@ -9,9 +9,9 @@ import { Sidebar } from "../side-bar/side-bar";
 // services
 import { SidebarService } from './../../services/sidebar-service';
 import { Link } from "react-router-dom";
-import {useState, useEffect, useContext} from 'react';
-import {AuthContext, logout} from './../../providers/auth-provider';
-import {useHistory} from 'react-router-dom'
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext, logout } from './../../providers/auth-provider';
+import { useHistory } from 'react-router-dom'
 export const Header = () => {
     const Auth = useContext(AuthContext);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -64,19 +64,18 @@ export const Header = () => {
                 </section>
                 <section className="right-section">
                     <div className="right-container">
-                        <CartButton route={'/cart'} clickEvent={cartClickEvent} />
                         {
-                        isLoggedIn ? 
-                            (
-                            <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logUserOut} />
-                            )
-                        :
-                        <Link to="/login" >
-                            <UiButton UIStyle={UIBtnCSS} text={'Login'}/>
-                        </Link>
+                            isLoggedIn ? <React.Fragment>
+                                <CartButton route={'/cart'} clickEvent={cartClickEvent} />
+                                <UiButton UIStyle={UIBtnCSS} text={'Logout'} onBtnClick={logUserOut} />
+                            </React.Fragment>
+                                :
+                                <Link to="/login" >
+                                    <UiButton UIStyle={UIBtnCSS} text={'Login'} />
+                                </Link>
                         }
                         {isLoggedIn ? <Link to="/home">
-                        <UiButton UIStyle={UIBtnCSS} text={'Home'}/>
+                            <UiButton UIStyle={UIBtnCSS} text={'Home'} />
                         </Link> : null}
                     </div>
                 </section>
@@ -92,10 +91,10 @@ export const Header = () => {
 
 async function getSideBarData() {
     const response = await SidebarService.fetchSidebarLocal()
-        if (response && response.status === 200) {
-            return response.data;
-        } else {
-            console.error('No data for sidebar')
-            return []
-        }
+    if (response && response.status === 200) {
+        return response.data;
+    } else {
+        console.error('No data for sidebar')
+        return []
+    }
 }

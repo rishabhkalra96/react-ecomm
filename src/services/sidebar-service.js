@@ -16,6 +16,14 @@ export const SidebarService = {
                 status: 200,
                 data: [
                     {
+                        name: 'Main Page',
+                        id: 'orders',
+                        route: '/',
+                        type: 'list-item',
+                        protected: false
+    
+                    },
+                    {
                         name: 'Orders',
                         id: 'orders',
                         route: '/my-orders',
@@ -60,7 +68,7 @@ export const SidebarService = {
                         id: 'add_new_product',
                         route: '/products/add',
                         type: 'list-item',
-                        protected: false
+                        protected: true
     
                     }
                 ]
