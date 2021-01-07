@@ -44,17 +44,17 @@ export const ProductDescription = () => {
                                 {currentProduct.name}
                             </p>
                             <p className="product-owner inline ml-2">
-                                by {currentProduct.owner_details.created_by}
+                                by {currentProduct.owner_details.name}
                             </p>
                         </div>
                         <div className="product-discount-price">
                             <p className="inline mb-3">
-                                Price Rs.{ContentBodyService.utilities.getDiscountedPrice(currentProduct.pricing_details.min, currentProduct.pricing_details.max_discount)}
+                                Price Rs.{ContentBodyService.utilities.getDiscountedPrice(currentProduct.pricing_details.original_price, currentProduct.pricing_details.max_discount)}
                                 <span> after {currentProduct.pricing_details.max_discount} % discount</span>
                             </p>
                         </div>
                         <p className="product-original-price">
-                            Orignal Retail price : Rs. {currentProduct.pricing_details.min}
+                            Orignal Retail price : Rs. {currentProduct.pricing_details.original_price}
                         </p>
                         {
                             currentProduct.fullfilled_by ?

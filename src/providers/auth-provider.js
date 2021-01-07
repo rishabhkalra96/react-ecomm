@@ -4,7 +4,6 @@ import {firebaseInstance, firebaseAuth} from './../config/firebase';
 const AuthContext = React.createContext({isLoggedIn: false, currentUser: null});
 
 const getbasicUserObject = (currentUser) => {
-    debugger
     return {
         email: currentUser.email,
         id: currentUser.uid,

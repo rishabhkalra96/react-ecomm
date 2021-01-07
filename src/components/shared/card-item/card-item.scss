@@ -84,3 +84,11 @@
         }
     }
 }
+
+.cardItem-card-body-desc {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-clamp: 1;
+    width: 100%;
+    height: 23px;
+}

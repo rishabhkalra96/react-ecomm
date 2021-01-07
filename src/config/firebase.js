@@ -21,6 +21,7 @@ const storageRef = fbStorageCore.ref()
 const FBstorage = {
   imageRef: storageRef.child('images'),
 }
+const FBTimeStamp = firebase.firestore.FieldValue.serverTimestamp
 
 export {
   firebaseInstance,
@@ -30,4 +31,5 @@ export {
   FBstorage,
   firebaseDB,
   storageRef,
+  FBTimeStamp,
 }

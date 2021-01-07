@@ -12,6 +12,10 @@ import FormControl from '@material-ui/core/FormControl';
 import {AuthContext, getbasicUserObject} from './../../providers/auth-provider'
 import {storageRef} from './../../config/firebase';
 import { coreDBService } from './../../services/core-db-service'
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+
+import firebase from 'firebase/app';
 const fullFilled_list = [
     {company_id: 'abcdefgh', name: 'Amazon Logistics'},
     {company_id: 'sampleId', name: 'E-kart Logistics'},
@@ -29,14 +33,17 @@ const initialConfig = {
     has_reviews: true,
     fullfilled_by: fullFilled_list[0],
     image_url: '',
+    image_raw_path: '',
     item_sample_images: [],
     owner_details: {
-        created_by: null,
+        name: '',
+        email: '',
+        id: '',
         isVerified: false,
     },
     pricing_details: {
-        max_discount: '',
-        min: '',
+        original_price: '0',
+        max_discount: '0',
         multi_currency: false,
         origin_currency: 'in',
     }
@@ -62,8 +69,27 @@ const validationConst = {
     fullfilled_by: {
         error: false,
         message: '',
+    },
+    pricing_details: {
+        original_price: {
+            error: false,
+            message: ''
+        },
+        max_discount: {
+            error: false,
+            message: ''
+        },
+        multi_currency: {
+            error: false,
+            message: ''
+        }
+
     }
 }
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
 
 export const AddProduct = () => {
     const Auth = useContext(AuthContext)
@@ -73,9 +99,18 @@ export const AddProduct = () => {
     const [specifications, setSpecifications] = useState([
         {display_name: 'Product Name', id: uniqueID(), value: ''}
     ]);
+    const [snack, setSnack] = useState({
+        severity: 'success',
+        duration: '6000',
+        message: 'Default Message',
+        open: false,
+    })
+    const [submit, setSubmit] = useState(null);
 
     const resetForm = () => {
+        initialConfig.id = uniqueID();
         setFormData(initialConfig);
+        setNewFile(null);
         resetError('all');
     }
 
@@ -113,6 +148,20 @@ export const AddProduct = () => {
         if (e.target.id === 'fullfilled') {
             fieldName = 'fullfilled_by'
             value = e.target.value
+        }
+        if (e.target.id === 'product-original-price') {
+            fieldName = 'pricing_details'
+            value = {
+                ...formData.pricing_details,
+                original_price: e.target.value,
+            }
+        }
+        if (e.target.id === 'product-max-discount') {
+            fieldName = 'pricing_details'
+            value = {
+                ...formData.pricing_details,
+                max_discount: e.target.value,
+            }
         }
         setFormData({
             ...formData,
@@ -165,6 +214,17 @@ export const AddProduct = () => {
         if (dataToValidate.has_specifications && !Object.keys(dataToValidate.specifications).length) {
             errorObj['specifications'] = {error: true, message: 'At least one specification is mandatory if the checkbox is marked'}
         }
+        if (!dataToValidate.pricing_details.original_price) {
+            errorObj['pricing_details'] = errorObj['pricing_details'] ? {...errorObj['pricing_details']} : {}
+            errorObj['pricing_details']['original_price'] = {error: true, message: 'Original Price is mandatory'}
+        }
+        if (!dataToValidate.pricing_details.max_discount) {
+            errorObj['pricing_details'] = errorObj['pricing_details'] ? {...errorObj['pricing_details']} : {}
+            errorObj['pricing_details']['max_discount'] = {error: true, message: 'Max Discount cannot be empty, you can put 0 also'}
+        } else if (dataToValidate.pricing_details.max_discount && isNaN(dataToValidate.pricing_details.max_discount)) {
+            errorObj['pricing_details'] = errorObj['pricing_details'] ? {...errorObj['pricing_details']} : {}
+            errorObj['pricing_details']['max_discount'] = {error: true, message: 'Max Discount has to be an integer like 10 and not 10%'}
+        }
         setValidationErrors({
             ...validationConst, ...errorObj
         })
@@ -178,11 +238,13 @@ export const AddProduct = () => {
         const finalData = formData;
         finalData['owner_details'] = currentUserObj
         finalData['specifications'] = formattedSpecifications;
+        finalData['created_on'] = firebase.firestore.FieldValue.serverTimestamp();
         console.log(finalData);
         if(validateForm(finalData)) {
             console.log('form is valid')
             // upload the product image and save in server
-            const cloudStorage = storageRef.child(`inventory/${finalData.owner_details.id}/${finalData.id}/${newFile.name}`)
+            finalData['image_raw_path'] = `inventory/${finalData.owner_details.id}/${finalData.id}/${newFile.name}`
+            const cloudStorage = storageRef.child(finalData.image_raw_path)
             try {
                 const uploadedFile = await cloudStorage.put(newFile)
                 console.log(uploadedFile)
@@ -192,11 +254,20 @@ export const AddProduct = () => {
                     finalData.image_url = url
                     // trigger database update query
                     await coreDBService.addNewProductToInventory(finalData)
+                    openSnack({
+                        duration: 6000,
+                        severity: 'success',
+                        message: 'Product added successfully!'
+                    })
+                    // reset the form for new entry
+                    resetForm();
+                    setSubmit(null)
                 } else {
                     throw new Error('Error while uploading image to cloud servers');
                 }
             } catch (e) {
                 console.log('Error occured while uploading data', e.toString())
+                setSubmit(null)
             }
 
         } else {
@@ -233,7 +304,33 @@ export const AddProduct = () => {
     setSpecifications(newSpecifications)
 }
 
+const handleCloseSnack = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnack({
+        ...snack, open: false,
+    });
+  };
+
+  const openSnack = ({message, duration, severity}) => {
+      setSnack({
+          message,
+          duration,
+          severity,
+          open: true,
+      })
+  }
+
     return <React.Fragment>
+        <Snackbar open={snack?.open}
+        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}} 
+        autoHideDuration={snack.duration ? parseInt(snack.duration) : 0} onClose={handleCloseSnack}>
+        <Alert onClose={handleCloseSnack} severity={snack?.severity}>
+          {snack?.message}
+        </Alert>
+      </Snackbar>
         <div className="flex justify-center mt-4 details-container">
         <form type="submit" className="form-container">
             <div className="basic-details pt-12">
@@ -301,6 +398,45 @@ export const AddProduct = () => {
                         </div>
                     </div> : null
                 }
+                <div className="pricing-details pt-12">
+                    <p className=" m-0 title font-size-2">Pricing Details</p>
+                    <div className="w-full-width my-5 field-wrapper">
+                <TextField 
+                error={(validationErrors.pricing_details && validationErrors.pricing_details.original_price) ? validationErrors.pricing_details.original_price.error : false}
+                helperText={(validationErrors.pricing_details && validationErrors.pricing_details.original_price) ? validationErrors.pricing_details.original_price.message : ''}
+                className="w-full-width" 
+                multiline value={formData.pricing_details.original_price} id="product-original-price" label="Product Original Price" variant="outlined" onChange={updateForm}/>
+                </div>
+                <div className="w-full-width my-5 field-wrapper">
+                <TextField 
+                error={(validationErrors.pricing_details && validationErrors.pricing_details.max_discount) ? validationErrors.pricing_details.max_discount.error : false}
+                helperText={(validationErrors.pricing_details && validationErrors.pricing_details.max_discount) ? validationErrors.pricing_details.max_discount.message : ''}
+                className="w-full-width" 
+                multiline value={formData.pricing_details.max_discount} id="product-max-discount" label="Max Discount supported" variant="outlined" onChange={updateForm}/>
+                </div>
+                    {/* <div className="w-full-width my-5 field-wrapper flex justify-between items-center">
+                        <p className="inline">
+                            Select the company which would handle logistics for you :
+                        </p>
+                        <div className="select-wrapper inline">
+                            <FormControl variant="outlined" className="min-control-width">
+                        <Select
+                        className="w-full"
+                            labelId="simple-select-filled-label"
+                            id="simple-select-filled"
+                            value={formData.fullfilled_by}
+                            onChange={updateForm}
+                            >
+                            {
+                                fullFilled_list.map((company, id) => <MenuItem key={id} value={company}>
+                                    {id === 0 ? <em>{company.name}</em> : <React.Fragment>{company.name}</React.Fragment>}
+                                </MenuItem>)
+                            }
+                        </Select>
+                            </FormControl>
+                        </div>
+                    </div> */}
+                </div>
                 <div className="logistics-details pt-12">
                     <p className=" m-0 title font-size-2">Logistics Details</p>
                     <div className="w-full-width my-5 field-wrapper flex justify-between items-center">
@@ -327,8 +463,8 @@ export const AddProduct = () => {
                     </div>
                 </div>
             <div className="flex justify-center my-5 button-container">
-            <Button className="mr-4" variant="contained" onClick={resetForm} color="secondary">Reset</Button>
-            <Button variant="contained" color="primary" onClick={submitProduct}>Submit</Button>
+            <Button className="mr-4" variant="contained" disabled={submit === 'submitting'} onClick={resetForm} color="secondary">Reset</Button>
+            <Button variant="contained" color="primary" disabled={submit === 'submitting'} onClick={submitProduct}>Submit</Button>
             </div>
         </form>
         </div>

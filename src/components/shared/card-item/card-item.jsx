@@ -47,7 +47,7 @@ export default function CardItem({item, onCardClick}) {
                         <b>{product ? product.name : null}</b>
                     </p>
                     <p className="cardItem-card-body-creator">
-                        <span>By </span> {product ? product.owner_details.created_by : null}
+                        <span>By </span> {product ? product.owner_details.name : null}
                     </p>
                     <div className="cardItem-ratings">
                         <Ratings count={5} filled={Math.floor((Math.random() * 5) + 1)} hoverEffect={true} ratingsCount={Math.floor((Math.random() * 500) + 1)} clickHandler={handleRatingsClick} />
@@ -60,11 +60,15 @@ export default function CardItem({item, onCardClick}) {
                     <div className="cartItem-price-container">
                         <p className="price-core inline">
                             <span className="currency-code">Rs.</span>
-                            {product ? ContentBodyService.utilities.getDiscountedPrice(product.pricing_details.min, product.pricing_details.max_discount) : null}
+                            {product ? ContentBodyService.utilities.getDiscountedPrice(product.pricing_details.original_price, product.pricing_details.max_discount) : null}
+                            {
+                            (product && !isNaN(product.pricing_details.max_discount) && product.pricing_details.max_discount !== '0')? 
                             <span className="pre-discount">
                                 <span className="currency-code">Rs.</span>
-                                {product ? product.pricing_details.min : null}
+                                {product.pricing_details.original_price}
                             </span>
+                             : null
+                             }
                         </p>
                         <div className="cart-container">
                             <FontAwesomeIcon icon={faCartPlus} />

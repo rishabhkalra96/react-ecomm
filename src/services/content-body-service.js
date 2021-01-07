@@ -36,7 +36,7 @@ async function populateDatabase(dumpData) {
         return stripNames.map(name => {
           return {
             category_name: name,
-            items: doc.docs.map(d => ({...d.data(), id: d.id}))
+            items: doc.docs.map(d => ({...d.data()}))
           }
         })
       } else {
@@ -58,14 +58,25 @@ async function populateDatabase(dumpData) {
 }
 
 /* const _runSample = async () => {
-  const docs = await (await db.collection('inventory').get()).docs.map(d => ({...d.data(), id: d.id}))
-  const newDocs = docs.filter(d => !d.hasOwnProperty('has_reviews')).map(data => {
+  const docs = await (await db.collection('inventory').get()).docs.map(d => {
+    const data = d.data();
+    return {
+      ...data,
+      pricing_details: {
+        original_price: data.pricing_details.original_price ? data.pricing_details.original_price : data.pricing_details.min,
+        max_discount: data.pricing_details.max_discount,
+        multi_currency: data.pricing_details.multi_currency,
+        origin_currency: data.pricing_details.origin_currency,
+      }
+    }
+  })
+  /* const newDocs = docs.filter(d => !d.hasOwnProperty('has_reviews')).map(data => {
     data['has_reviews'] = true
       return data;
   })
-  const promises = newDocs.map(d => {
+  const promises = docs.map(d => {
     const dataToStore = {...d};
-    delete dataToStore.id;
+    // delete dataToStore.id;
     return db.collection('inventory').doc(d.id).update({...dataToStore})
   })
   try {

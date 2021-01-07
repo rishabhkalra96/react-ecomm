@@ -4,7 +4,6 @@ import * as uniqueID from 'uniqid';
 export const coreDBService = (() => {
     const _addNewProductToInventory = async (productData) => {
         try {
-            debugger
             if (productData && !productData.id) {
                 productData.id = uniqueID();
             }
@@ -13,7 +12,6 @@ export const coreDBService = (() => {
             }
             // initiate
             const newDoc = await db.collection('inventory').doc().set(productData);
-            debugger;
             console.log('new id is ', newDoc.id);
             return {ok: true, status: 200, data: {message: 'product added successfully'}}
         } catch (e) {
@@ -24,11 +22,11 @@ export const coreDBService = (() => {
         if (!productID) {
             throw new Error('productID not valid')
         }
-        const productDoc = await db.collection('inventory').doc(productID).get()
-        if (!productDoc.exists) {
+        const productDoc = await db.collection('inventory').where('id', '==', productID).limit(1).get()
+        if (!productDoc.docs.length) {
             return {ok: true, status: 404, message: 'product not found by id ' + productID}
         }
-        return {ok: true, status: 200, data: {id: productID, ...productDoc.data()}}
+        return {ok: true, status: 200, data: {id: productID, ...productDoc.docs[0].data()}}
     }
     return {
         getProductDetailsByID: _getProductDetailsByID,
