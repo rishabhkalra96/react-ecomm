@@ -24,6 +24,14 @@ export const SidebarService = {
     
                     },
                     {
+                        name: 'Add new Product',
+                        id: 'add_new_product',
+                        route: '/products/add',
+                        type: 'list-item',
+                        protected: true
+    
+                    },
+                    {
                         name: 'Orders',
                         id: 'orders',
                         route: '/my-orders',
@@ -32,41 +40,17 @@ export const SidebarService = {
     
                     },
                     {
-                        name: 'Settings',
-                        id: 'settings',
-                        route: '/settings',
-                        type: 'list-item',
-                        protected: true
-    
-                    },
-                    {
                         name: 'Profile',
                         id: 'profile',
-                        route: '/my-profile',
+                        route: '/user/profile',
                         type: 'list-item',
                         protected: true
     
                     },
                     {
-                        name: 'Subscriptions',
-                        id: 'subscriptions',
-                        route: '/subscriptions',
-                        type: 'list-item',
-                        protected: true
-    
-                    },
-                    {
-                        name: 'Shipment',
-                        id: 'shipment',
-                        route: '/shipment',
-                        type: 'list-item',
-                        protected: true
-    
-                    },
-                    {
-                        name: 'Add new Product',
-                        id: 'add_new_product',
-                        route: '/products/add',
+                        name: 'Settings',
+                        id: 'settings',
+                        route: '/user/settings',
                         type: 'list-item',
                         protected: true
     

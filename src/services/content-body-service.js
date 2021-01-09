@@ -31,7 +31,7 @@ async function populateDatabase(dumpData) {
 
   async function _getBodyStrips(stripNames) {
     try {
-      const doc = await db.collection('inventory').get()
+      const doc = await db.collection('inventory').limit(10).get()
       if (!doc.empty) {
         return stripNames.map(name => {
           return {

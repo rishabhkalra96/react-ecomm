@@ -27,7 +27,7 @@ useEffect(() => {
 }, [props.items])
     
 const viewAll = () => {
-        console.log('clicked view all for ', props)
+        history.push(`/search/results?keyword=${props.title}`)
     }
 
   const cardClickHandler = (data) => {

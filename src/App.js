@@ -15,6 +15,9 @@ import { ProtectedRoute } from './components/protected-router/protected-router';
 import {Home} from './components/home/home'
 import {ProductDescription} from './components/product-description/product-description'
 import {AddProduct} from './components/add-product/add-product'
+import { UserProfile } from './components/user-profile/user-profile';
+import { UserSettings } from './components/user-settings/user-settings';
+import SearchResults from './components/search-results/search-results';
 
 function App() {
   const [loggedInDetails, setLoggedInDetails] = useState({ isLoggedIn: false, currentUser: null})
@@ -40,6 +43,11 @@ function App() {
           <Route exact path="/">
             <ContentBody />
           </Route>
+          <Route exact path="/search/results">
+            <SearchResults />
+          </Route>
+          <ProtectedRoute path="/user/profile" component={UserProfile}/>
+          <ProtectedRoute path="/user/settings" component={UserSettings}/>
           <Route exact path="/login">
             <Login formType='login' />
           </Route>
