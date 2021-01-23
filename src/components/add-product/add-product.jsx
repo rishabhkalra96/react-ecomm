@@ -414,28 +414,6 @@ const handleCloseSnack = (event, reason) => {
                 className="w-full-width" 
                 multiline value={formData.pricing_details.max_discount} id="product-max-discount" label="Max Discount supported" variant="outlined" onChange={updateForm}/>
                 </div>
-                    {/* <div className="w-full-width my-5 field-wrapper flex justify-between items-center">
-                        <p className="inline">
-                            Select the company which would handle logistics for you :
-                        </p>
-                        <div className="select-wrapper inline">
-                            <FormControl variant="outlined" className="min-control-width">
-                        <Select
-                        className="w-full"
-                            labelId="simple-select-filled-label"
-                            id="simple-select-filled"
-                            value={formData.fullfilled_by}
-                            onChange={updateForm}
-                            >
-                            {
-                                fullFilled_list.map((company, id) => <MenuItem key={id} value={company}>
-                                    {id === 0 ? <em>{company.name}</em> : <React.Fragment>{company.name}</React.Fragment>}
-                                </MenuItem>)
-                            }
-                        </Select>
-                            </FormControl>
-                        </div>
-                    </div> */}
                 </div>
                 <div className="logistics-details pt-12">
                     <p className=" m-0 title font-size-2">Logistics Details</p>

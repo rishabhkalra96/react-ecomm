@@ -70,9 +70,11 @@
         }
         .cart-container {
             display: flex;
-            margin-right: 10px;
             align-items: center;
             font-size: 1.5rem;
+            &.margin-right {
+                margin-right: 10px;
+            }
         }
     }
     .other-details {

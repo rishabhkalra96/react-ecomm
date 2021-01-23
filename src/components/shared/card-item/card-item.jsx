@@ -8,12 +8,42 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
 import {ContentBodyService} from './../../../services/content-body-service'
 import Skeleton from 'react-loading-skeleton';
+import { OptionsMenu } from '../options-menu/options-menu';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import {ActionDialog} from './../../shared/action-dialog/action-dialog';
+import { AuthContext } from './../../../providers/auth-provider'
 export default function CardItem({item, onCardClick}) {
+    const Auth = React.useContext(AuthContext)
     const [productImage, setProductImage] = useState(defaultImage)
     const [product, setProduct] = useState(null)
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const menuOptions = [
+        {
+            name: 'Edit',
+            id: 'edit',
+            selected: false,
+        },
+        {
+            name: 'Delete',
+            id: 'delete',
+            selected: false,
+        }
+    ]
 
     useEffect(() => {
         if (item) {
+            if (typeof item.getName !== 'function') {
+                item.getName = function () {
+                        return this.name;
+                    }
+                item.getDeleteMessage = function () {
+                    debugger
+                        return <p>
+                            Are you sure you want to delete product {this.getName()} ? 
+                        Once deleted, it can never be recovered.
+                        </p>
+                    }
+            }
             setProduct(item)
             if (item.image_url) {
                 setProductImage(item.image_url)
@@ -22,6 +52,20 @@ export default function CardItem({item, onCardClick}) {
 
     }, [item])
 
+    const handleOptionsClick = (e, product) => {
+        e.stopPropagation();
+        const clickedItemName = e.target.getAttribute('name');
+        if (clickedItemName === 'delete') {
+            // clicked on delete
+            console.log('delete')
+            setOpenDeleteDialog(true);
+        } else if (clickedItemName === 'edit') {
+            // clicked on edit functionality
+            console.log('edit')
+        }
+        console.log(product)
+    }
+
     const handleHover = (e) => {
         e.preventDefault()
         // start the slideshow and make the images full width
@@ -29,6 +73,14 @@ export default function CardItem({item, onCardClick}) {
 
     const handleRatingsClick = (e) => {
         console.log('clicked on ratings', e)
+    }
+
+    const onDialogAccept = (e) => {
+        console.log('accepted')
+    }
+
+    const onDialogReject = (e) => {
+        console.log('rejected');
     }
 
     return (
@@ -70,8 +122,24 @@ export default function CardItem({item, onCardClick}) {
                              : null
                              }
                         </p>
-                        <div className="cart-container">
+                        <div className={`cart-container ${Auth.isLoggedIn ? 'no-margin' : 'margin-right'}`}>
                             <FontAwesomeIcon icon={faCartPlus} />
+                            {Auth.isLoggedIn ? <React.Fragment>
+                                <OptionsMenu
+                                icon={<MoreVertIcon />}
+                                onItemClick={(e) => handleOptionsClick(e, item)}
+                                options={ menuOptions }
+                            />
+                            <ActionDialog 
+                            openDialog={openDeleteDialog} 
+                            mainTitle={'Delete Item'}
+                            mainBody={product ? product.getDeleteMessage(): ''}
+                            showAccept={true}
+                            showReject={true}
+                            accept={ {text: 'Yes', onClick: onDialogAccept} }
+                            reject={ {text: 'Oh No !', onClick: onDialogReject} }
+                            />
+                            </React.Fragment> : null}
                         </div>
 
                     </div>
