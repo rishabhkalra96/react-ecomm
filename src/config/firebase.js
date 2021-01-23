@@ -1,14 +1,14 @@
 import firebase from 'firebase'
 import 'firebase/storage'
 const firebaseConfig = {
-    apiKey: "AIzaSyBq_JwdnMOW94QzFs8N1I27HoRw1yG-KII",
-    authDomain: "react-ecomm-61f67.firebaseapp.com",
-    databaseURL: "https://react-ecomm-61f67.firebaseio.com",
-    projectId: "react-ecomm-61f67",
-    storageBucket: "react-ecomm-61f67.appspot.com",
-    messagingSenderId: "335658446317",
-    appId: "1:335658446317:web:2ca180526849fbb1af8be4",
-    measurementId: "G-VM9HPE8ER8"
+    apiKey: process.env.REACT_APP_ECOMM_FB_API_KEY,
+    authDomain: process.env.REACT_APP_ECOMM_FB_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_ECOMM_FB_DB_URL,
+    projectId: process.env.REACT_APP_ECOMM_FB_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_ECOMM_FB_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_ECOMM_FB_MESSAGE_SENDER_ID,
+    appId: process.env.REACT_APP_ECOMM_FB_APP_ID,
+    measurementId: process.env.REACT_APP_ECOMM_FB_MEASUREMENT_ID
   };
 const firebaseInstance = firebase.initializeApp(firebaseConfig);
 firebase.analytics()
