@@ -43,7 +43,7 @@ const viewAll = () => {
           <div className="carousel-looper">
             {
               cards.length ?
-            cards.map((v,i) => <CardItem item={v} key={i} onCardClick={cardClickHandler}/>) :
+            cards.map((v,i) => <CardItem item={v} key={i} onCardClick={cardClickHandler} onAction={(event) => props.onCardAction(event)}/>) :
             new Array(10).fill(0).map((_,id) => <CardItem key={id}/>)
           }
           </div>

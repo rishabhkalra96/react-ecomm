@@ -12,7 +12,7 @@ import { OptionsMenu } from '../options-menu/options-menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {ActionDialog} from './../../shared/action-dialog/action-dialog';
 import { AuthContext } from './../../../providers/auth-provider'
-export default function CardItem({item, onCardClick}) {
+export default function CardItem({item, onCardClick, onAction}) {
     const Auth = React.useContext(AuthContext)
     const [productImage, setProductImage] = useState(defaultImage)
     const [product, setProduct] = useState(null)
@@ -37,9 +37,8 @@ export default function CardItem({item, onCardClick}) {
                         return this.name;
                     }
                 item.getDeleteMessage = function () {
-                    debugger
                         return <p>
-                            Are you sure you want to delete product {this.getName()} ? 
+                            Are you sure you want to delete product "{this.getName()}" ? 
                         Once deleted, it can never be recovered.
                         </p>
                     }
@@ -52,7 +51,7 @@ export default function CardItem({item, onCardClick}) {
 
     }, [item])
 
-    const handleOptionsClick = (e, product) => {
+    const handleOptionsClick = (e) => {
         e.stopPropagation();
         const clickedItemName = e.target.getAttribute('name');
         if (clickedItemName === 'delete') {
@@ -63,7 +62,19 @@ export default function CardItem({item, onCardClick}) {
             // clicked on edit functionality
             console.log('edit')
         }
-        console.log(product)
+    }
+
+    const emitAction = type => {
+        switch (type) {
+            case 'delete':
+                onAction({ type: 'DELETE_ITEM', product });
+                break;
+            case 'edit':
+                onAction({type: 'EDIT_ITEM', product });
+                break;
+            default :
+                console.warn('invalid option detected ', type);
+        }
     }
 
     const handleHover = (e) => {
@@ -77,6 +88,8 @@ export default function CardItem({item, onCardClick}) {
 
     const onDialogAccept = (e) => {
         console.log('accepted')
+        // delete the selected product
+        emitAction('delete');
     }
 
     const onDialogReject = (e) => {

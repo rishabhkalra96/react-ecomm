@@ -6,7 +6,7 @@ import { HamburgerBtn } from "../shared/hamburger-btn/hamburger-btn";
 import { CartButton } from "../cart-btn/cart-btn";
 import { UiButton } from "../ui-button/ui-btn";
 import { Sidebar } from "../side-bar/side-bar";
-import LinearProgress from '@material-ui/core/LinearProgress';
+// import LinearProgress from '@material-ui/core/LinearProgress';
 // services
 import { SidebarService } from './../../services/sidebar-service';
 import { Link } from "react-router-dom";

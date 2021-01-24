@@ -15,7 +15,27 @@ export const coreDBService = (() => {
             console.log('new id is ', newDoc.id);
             return {ok: true, status: 200, data: {message: 'product added successfully'}}
         } catch (e) {
+            return {ok: false, status: 500, message : e.toString()};
+        }
+    }
 
+    const _deleteProducFromInventory = async (productID) => {
+        try {
+            if (productID) {
+                const docsMatched = await db.collection('inventory').where("id", "==", productID).limit(1).get();
+                if(!docsMatched.empty) {
+                    await Promise.all(docsMatched.docs.map(document => document.ref.delete()));
+                    // delete related reviews of the product as well
+                    const matchingreviews = await db.collection('customer-reviews').where("product_id", "==", productID).limit(1).get();
+                    if (!matchingreviews.empty) {
+                        await Promise.all(matchingreviews.map(reviewDoc => reviewDoc.ref.delete()));
+                    }
+                    return await {ok: true, status: 200, data: {message: 'Product deleted successfully!'}}
+                }
+            }
+            return {ok: false, status: 400, error: 'product id is not provided'};
+        } catch(e) {
+            return {ok: false, status: 500, error: e.toString()};
         }
     }
     const _getProductDetailsByID = async (productID) => {
@@ -31,5 +51,6 @@ export const coreDBService = (() => {
     return {
         getProductDetailsByID: _getProductDetailsByID,
         addNewProductToInventory: _addNewProductToInventory,
+        deleteProducFromInventory: _deleteProducFromInventory,
     }
 })()
