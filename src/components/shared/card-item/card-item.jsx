@@ -53,6 +53,7 @@ export default function CardItem({item, onCardClick, onAction}) {
 
     const handleOptionsClick = (e) => {
         e.stopPropagation();
+        debugger;
         const clickedItemName = e.target.getAttribute('name');
         if (clickedItemName === 'delete') {
             // clicked on delete
@@ -75,6 +76,7 @@ export default function CardItem({item, onCardClick, onAction}) {
             default :
                 console.warn('invalid option detected ', type);
         }
+        setOpenDeleteDialog(false);
     }
 
     const handleHover = (e) => {
@@ -144,7 +146,8 @@ export default function CardItem({item, onCardClick, onAction}) {
                                 options={ menuOptions }
                             />
                             <ActionDialog 
-                            openDialog={openDeleteDialog} 
+                            openDialog={openDeleteDialog}
+                            onClose = {() => setOpenDeleteDialog(false)}
                             mainTitle={'Delete Item'}
                             mainBody={product ? product.getDeleteMessage(): ''}
                             showAccept={true}

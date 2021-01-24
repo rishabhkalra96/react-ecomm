@@ -12,7 +12,8 @@ export const ActionDialog = ({
   showAccept=true,
   showReject=true,
   accept={text: 'Accept', onClick: () => {}},
-  reject={text: 'Deny', onClick: () => {}}
+  reject={text: 'Deny', onClick: () => {}},
+  onClose = () => {}
 }) => {
     const [open, setOpen] = React.useState(false);
 
@@ -29,13 +30,16 @@ export const ActionDialog = ({
         if (eventType === 'reject') {
           reject.onClick(e)
         }
+        if (eventType === 'general') {
+          onClose(e);
+        }
       };
 
       return (
         <div onClick={(e) => {e.stopPropagation()}}>
           <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={(e) => handleClose(e, 'general')}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
           >
