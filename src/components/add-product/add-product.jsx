@@ -16,14 +16,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import firebase from 'firebase/app';
-const fullFilled_list = [
-    {company_id: 'abcdefgh', name: 'Amazon Logistics'},
-    {company_id: 'sampleId', name: 'E-kart Logistics'},
-    {company_id: 'dskjndaskdjn', name: 'Delhivery'},
-    {company_id: 'afsdasegrsead', name: 'UBS'},
-    {company_id: 'poiughfmnbv', name: 'Myntra Logistics'},
-    {company_id: 'asdfghgfdsasdf', name: 'Owner Based Logistics'},
-]
+import CONSTANTS from '../../config/constants';
+const fullFilled_list = CONSTANTS.PRODUCT.DEFAULT_LOGISCTICS
 const initialConfig = {
     id: uniqueID(),
     name: '',
@@ -254,11 +248,7 @@ export const AddProduct = () => {
                     finalData.image_url = url
                     // trigger database update query
                     await coreDBService.addNewProductToInventory(finalData)
-                    openSnack({
-                        duration: 6000,
-                        severity: 'success',
-                        message: 'Product added successfully!'
-                    })
+                    openSnack(CONSTANTS.PRODUCT.DEFAULT_SUCCESS_MESSAGE)
                     // reset the form for new entry
                     resetForm();
                     setSubmit(null)

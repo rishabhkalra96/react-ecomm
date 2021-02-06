@@ -55,8 +55,9 @@ function App() {
             <Login formType='signup' />
           </Route>
           <ProtectedRoute path="/home" component={Home}/>
-          <ProtectedRoute path="/products/add" component={AddProduct}/>
-          <Route path="/product/:productID">
+          <ProtectedRoute path="/product/add" component={AddProduct}/>
+          <ProtectedRoute path="/product/edit/:productID" component={AddProduct}/>
+          <Route path="/product/view/:productID">
             <ProductDescription />
           </Route>
         </Router>

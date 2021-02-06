@@ -31,7 +31,7 @@ const viewAll = () => {
     }
 
   const cardClickHandler = (data) => {
-    history.push(`/product/${data.id}`)
+    history.push(`/product/view/${data.id}`)
   }
 
     return (

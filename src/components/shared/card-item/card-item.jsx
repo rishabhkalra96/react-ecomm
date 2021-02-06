@@ -61,6 +61,7 @@ export default function CardItem({item, onCardClick, onAction}) {
         } else if (clickedItemName === 'edit') {
             // clicked on edit functionality
             console.log('edit')
+            emitAction('edit')
         }
     }
 

@@ -26,7 +26,7 @@ export const SidebarService = {
                     {
                         name: 'Add new Product',
                         id: 'add_new_product',
-                        route: '/products/add',
+                        route: '/product/add',
                         type: 'list-item',
                         protected: true
     
