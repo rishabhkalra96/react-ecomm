@@ -58,18 +58,43 @@ async function populateDatabase(dumpData) {
 }
 
 /* const _runSample = async () => {
-  const docs = await (await db.collection('inventory').get()).docs.map(d => {
+  const totalDocuments = await db.collection('inventory');
+  debugger
+  const docs = (await totalDocuments.get()).docs.filter(d => {
     const data = d.data();
-    return {
-      ...data,
-      pricing_details: {
-        original_price: data.pricing_details.original_price ? data.pricing_details.original_price : data.pricing_details.min,
-        max_discount: data.pricing_details.max_discount,
-        multi_currency: data.pricing_details.multi_currency,
-        origin_currency: data.pricing_details.origin_currency,
-      }
-    }
+    return data.hasOwnProperty('hasRatings') && (!data.hasOwnProperty('ratings') || !data.ratings)
   })
+  debugger;
+  docs.forEach(async faultyDoc => {
+    const filteredDocs = (await totalDocuments.where('id', '==', faultyDoc.data().id).get())
+    filteredDocs.docs.map(async doc => doc.ref.update(
+      {
+        hasRatings: true,
+        ratings: {
+          average: Math.floor((Math.random() * 5) + 1),
+          maxCount: 5,
+          ratingsBy: Math.floor((Math.random() * 1000) + 1)
+        }
+      }
+    ));
+  }) */
+  /* const promises = docs.map(d => {
+    const dataToStore = {...d};
+    // delete dataToStore.id;
+    const sc = await db.collection('inventory').where('id', '==', d.id).get();
+    if (!sc.empty) {
+      sc.docs.forEach(doc => {
+        doc.
+      })
+    }
+  }) */
+
+  /* try {
+    const response = await Promise.all(promises)
+    console.log('all ok', response)
+  } catch (err) {
+    console.log('error occured ', err)
+  } */
   /* const newDocs = docs.filter(d => !d.hasOwnProperty('has_reviews')).map(data => {
     data['has_reviews'] = true
       return data;
@@ -85,7 +110,8 @@ async function populateDatabase(dumpData) {
   } catch (err) {
     console.log('error occured ', err)
   }
-} */
+}
+*/
 
 export const ContentBodyService = {
     getBannerImages: async () => await getRemoteBannerImages(),

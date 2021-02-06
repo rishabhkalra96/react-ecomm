@@ -53,7 +53,6 @@ export default function CardItem({item, onCardClick, onAction}) {
 
     const handleOptionsClick = (e) => {
         e.stopPropagation();
-        debugger;
         const clickedItemName = e.target.getAttribute('name');
         if (clickedItemName === 'delete') {
             // clicked on delete
@@ -116,9 +115,12 @@ export default function CardItem({item, onCardClick, onAction}) {
                     <p className="cardItem-card-body-creator">
                         <span>By </span> {product ? product.owner_details.name : null}
                     </p>
-                    <div className="cardItem-ratings">
-                        <Ratings count={5} filled={Math.floor((Math.random() * 5) + 1)} hoverEffect={true} ratingsCount={Math.floor((Math.random() * 500) + 1)} clickHandler={handleRatingsClick} />
-                    </div>
+                    {
+                        product && product.hasRatings ? <div className="cardItem-ratings">
+                        <Ratings count={product.ratings.maxCount} filled={product.ratings.average} hoverEffect={false} allowToRate={true} ratingsCount={product.ratings.ratingsBy} clickHandler={handleRatingsClick} />
+                    </div> : null
+                    }
+        
                     <div className="cartItem-desc">
                         <p>
                             {product ? product.short_description : null}

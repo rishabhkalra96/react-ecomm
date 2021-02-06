@@ -43,16 +43,21 @@ export default function Ratings(props) {
     }
 
     const ratingClickHandler = (e) => {
-        const currentVal = e.target.parentElement.parentElement.getAttribute('number') ? parseInt(e.target.parentElement.parentElement.getAttribute('number')) : 0
-        if (currentVal !== props.filled) {
-            setFilledStars(currentVal)
-            setHasRated(true)
+        e.stopPropagation();
+        if (props.allowToRate) {
+            const currentVal = e.target.parentElement.parentElement.getAttribute('number') ? parseInt(e.target.parentElement.parentElement.getAttribute('number')) : 0
+            if (currentVal !== props.filled) {
+                setFilledStars(currentVal)
+                setHasRated(true)
+            }
+            props.clickHandler({
+                item: {},
+                initialVal: props.filled,
+                currentVal
+            })
+        } else {
+            // do nothing
         }
-        props.clickHandler({
-            item: {},
-            initialVal: props.filled,
-            currentVal
-        })
     }
 
     const removeCurrentRating = (e) => {
