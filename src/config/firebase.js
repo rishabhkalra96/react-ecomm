@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import {auth, initializeApp, storage, firestore, analytics } from 'firebase'
 import 'firebase/storage'
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_ECOMM_FB_API_KEY,
@@ -10,22 +10,21 @@ const firebaseConfig = {
     appId: process.env.REACT_APP_ECOMM_FB_APP_ID,
     measurementId: process.env.REACT_APP_ECOMM_FB_MEASUREMENT_ID
   };
-const firebaseInstance = firebase.initializeApp(firebaseConfig);
-firebase.analytics()
-const firebaseAuth = firebase.auth
-const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
-const facebookAuthProvider = new firebase.auth.FacebookAuthProvider()
-const fbStorageCore = firebase.storage()
-const firebaseDB = firebase.firestore()
+const firebaseInstance = initializeApp(firebaseConfig);
+analytics()
+const googleAuthProvider = new auth.GoogleAuthProvider()
+const facebookAuthProvider = new auth.FacebookAuthProvider()
+const fbStorageCore = storage()
+const firebaseDB = firestore()
 const storageRef = fbStorageCore.ref()
 const FBstorage = {
   imageRef: storageRef.child('images'),
 }
-const FBTimeStamp = firebase.firestore.FieldValue.serverTimestamp
+const FBTimeStamp = firestore.FieldValue.serverTimestamp
 
 export {
   firebaseInstance,
-  firebaseAuth,
+  auth as firebaseAuth,
   googleAuthProvider,
   facebookAuthProvider,
   FBstorage,
