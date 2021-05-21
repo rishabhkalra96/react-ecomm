@@ -36,7 +36,14 @@ export const ContentBody = () => {
                         break;
                     }
                 case CONSTANTS.EDIT_ITEM_ACTION:
-                    {   history.push(`/product/edit/${event.product.id}`)
+                    {   const dataToSend = {...event.product}
+                    // remove the functions, those are not really required
+                    delete dataToSend.getName
+                    delete dataToSend.getDeleteMessage
+                        history.push({
+                        pathname: `/product/edit/${event.product.id}`,
+                        state: {product_to_edit: dataToSend},
+                    })
                         break;
                     }
                 default: {

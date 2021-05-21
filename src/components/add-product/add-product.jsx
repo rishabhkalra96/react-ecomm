@@ -1,5 +1,6 @@
 import './add-product.scss';
-import React , { useState, useContext } from 'react';
+import React , { useState, useContext, useEffect } from 'react';
+import {useParams, useLocation} from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { UploadBtn } from './../shared/upload-btn/upload-btn'
@@ -12,12 +13,13 @@ import FormControl from '@material-ui/core/FormControl';
 import {AuthContext, getbasicUserObject} from './../../providers/auth-provider'
 import {storageRef} from './../../config/firebase';
 import { coreDBService } from './../../services/core-db-service'
+import * as utils from './services/utils-service'
+import { useDefaultLogistics } from './../../hooks/default_logistics';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import firebase from 'firebase/app';
 import CONSTANTS from '../../config/constants';
-const fullFilled_list = CONSTANTS.PRODUCT.DEFAULT_LOGISCTICS
 const initialConfig = {
     id: uniqueID(),
     name: '',
@@ -25,7 +27,7 @@ const initialConfig = {
     long_description: '',
     has_specifications: false,
     has_reviews: true,
-    fullfilled_by: fullFilled_list[0],
+    fullfilled_by: {},
     image_url: '',
     image_raw_path: '',
     item_sample_images: [],
@@ -85,14 +87,16 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
 
-export const AddProduct = () => {
+export const AddProduct = (props) => {
+	const fullFilled_list = useDefaultLogistics();
+    const editModeProductID = useParams().productID || ''
+    const routeStateData = useLocation()
     const Auth = useContext(AuthContext)
+    const [originalProduct, setOriginalProduct] = useState(null)
     const [newFile, setNewFile] = useState(null);
-    const [formData, setFormData] = useState(initialConfig);
+    const [formData, setFormData] = useState({...initialConfig, fullfilled_by: fullFilled_list[0]});
     const [validationErrors, setValidationErrors] = useState(validationConst);
-    const [specifications, setSpecifications] = useState([
-        {display_name: 'Product Name', id: uniqueID(), value: ''}
-    ]);
+    const [specifications, setSpecifications] = useState([]);
     const [snack, setSnack] = useState({
         severity: 'success',
         duration: '6000',
@@ -101,9 +105,58 @@ export const AddProduct = () => {
     })
     const [submit, setSubmit] = useState(null);
 
-    const resetForm = () => {
-        initialConfig.id = uniqueID();
-        setFormData(initialConfig);
+    useEffect(() => {
+		function enableEditMode() {
+			try {
+				// set the existing id as product id,
+				const exisitingProductToEdit = routeStateData.state ? routeStateData.state.product_to_edit : null
+				// parse specifications object for rendering
+				exisitingProductToEdit.specifications = parseSpecificationsForEdit(exisitingProductToEdit.specifications)
+				if (exisitingProductToEdit) {
+					debugger
+					if (fullFilled_list.length) {
+						exisitingProductToEdit.fullfilled_by = fullFilled_list.find(obj => obj.company_id === exisitingProductToEdit.fullfilled_by.company_id)
+					}
+					setOriginalProduct({...exisitingProductToEdit})
+					// attach reference to fullfilled_by list from api
+					const editInitialData = {
+						...initialConfig,
+						...utils.prepareOriginalDataForEdit(exisitingProductToEdit)}
+					setFormData(editInitialData)
+					setSpecifications(editInitialData.specifications)
+				} else {
+					setOriginalProduct(null)
+				}
+				// prefill the form as it is
+			} catch (e) {
+				console.error('Error while getting details of product', e.toString())
+				setOriginalProduct(null)
+			}
+		}
+        if (editModeProductID) {
+            enableEditMode()
+        } else {
+            setSpecifications([{display_name: 'Product Name', id: uniqueID(), value: ''}])
+        }
+    }, [editModeProductID, routeStateData, fullFilled_list])
+
+    function parseSpecificationsForEdit(specificationsObj) {
+        if (specificationsObj && specificationsObj !== null && specificationsObj !== undefined) {
+            let specificationsObjCopy = []
+            specificationsObjCopy = Object.entries(specificationsObj).map(mainObj => ({...mainObj[1], id: mainObj[0]}))
+            return specificationsObjCopy
+        }
+        return specificationsObj
+    }
+
+    const resetForm = (editMode) => {
+        if (editMode) {
+            const editInitialData = {...initialConfig, ...utils.prepareOriginalDataForEdit(originalProduct)}
+            setFormData(editInitialData);
+        } else {
+            initialConfig.id = uniqueID();
+            setFormData(initialConfig);
+        }
         setNewFile(null);
         resetError('all');
     }
@@ -225,7 +278,7 @@ export const AddProduct = () => {
         return !Object.keys(errorObj).length
     }
 
-    const submitProduct = async (e) => {
+    const submitProduct = async (e, actionType='create') => {
         e.preventDefault()
         const formattedSpecifications = getFormattedSpecifications();
         const currentUserObj = getbasicUserObject(Auth.currentUser)
@@ -234,35 +287,39 @@ export const AddProduct = () => {
         finalData['specifications'] = formattedSpecifications;
         finalData['created_on'] = firebase.firestore.FieldValue.serverTimestamp();
         console.log(finalData);
-        if(validateForm(finalData)) {
-            console.log('form is valid')
-            // upload the product image and save in server
-            finalData['image_raw_path'] = `inventory/${finalData.owner_details.id}/${finalData.id}/${newFile.name}`
-            const cloudStorage = storageRef.child(finalData.image_raw_path)
-            try {
-                const uploadedFile = await cloudStorage.put(newFile)
-                console.log(uploadedFile)
-                if (uploadedFile.state === 'success') {
-                    // use the uploaded url to database
-                    const url = await uploadedFile.ref.getDownloadURL();
-                    finalData.image_url = url
-                    // trigger database update query
-                    await coreDBService.addNewProductToInventory(finalData)
-                    openSnack(CONSTANTS.PRODUCT.DEFAULT_SUCCESS_MESSAGE)
-                    // reset the form for new entry
-                    resetForm();
-                    setSubmit(null)
-                } else {
-                    throw new Error('Error while uploading image to cloud servers');
-                }
-            } catch (e) {
-                console.log('Error occured while uploading data', e.toString())
-                setSubmit(null)
-            }
-
+        if (actionType === 'save') {
+            console.log('we are in save action')
         } else {
-            console.log('form is invalid')
-            console.log(validationErrors)
+            if(validateForm(finalData)) {
+                console.log('form is valid')
+                // upload the product image and save in server
+                finalData['image_raw_path'] = `inventory/${finalData.owner_details.id}/${finalData.id}/${newFile.name}`
+                const cloudStorage = storageRef.child(finalData.image_raw_path)
+                try {
+                    const uploadedFile = await cloudStorage.put(newFile)
+                    console.log(uploadedFile)
+                    if (uploadedFile.state === 'success') {
+                        // use the uploaded url to database
+                        const url = await uploadedFile.ref.getDownloadURL();
+                        finalData.image_url = url
+                        // trigger database update query
+                        await coreDBService.addNewProductToInventory(finalData)
+                        openSnack(CONSTANTS.PRODUCT.DEFAULT_SUCCESS_MESSAGE)
+                        // reset the form for new entry
+                        resetForm();
+                        setSubmit(null)
+                    } else {
+                        throw new Error('Error while uploading image to cloud servers');
+                    }
+                } catch (e) {
+                    console.log('Error occured while uploading data', e.toString())
+                    setSubmit(null)
+                }
+    
+            } else {
+                console.log('form is invalid')
+                console.log(validationErrors)
+            }
         }
     }
 
@@ -353,6 +410,14 @@ const handleCloseSnack = (event, reason) => {
                     </div>
                 </div>  : null
                 }
+                {
+                    !newFile && editModeProductID && originalProduct ?
+                    <div className="flex my-5 field-wrapper">
+                <div className="image-preview-wrapper">
+                        <img src={formData.image_url} alt=""/>
+                    </div>
+                </div>  : null
+                }
                 <div className="flex my-5 field-wrapper">
                     {
                         newFile ? <Button variant="contained" color="secondary" onClick={() => setNewFile(null)}>Remove Image</Button> :
@@ -414,15 +479,19 @@ const handleCloseSnack = (event, reason) => {
                         <div className="select-wrapper inline">
                             <FormControl variant="outlined" className="min-control-width">
                         <Select
-                        className="w-full"
+                            className="w-full"
                             labelId="simple-select-filled-label"
                             id="simple-select-filled"
-                            value={formData.fullfilled_by}
+                            value={
+                                formData.fullfilled_by ? formData.fullfilled_by : "{}"
+                            }
                             onChange={updateForm}
                             >
                             {
                                 fullFilled_list.map((company, id) => <MenuItem key={id} value={company}>
-                                    {id === 0 ? <em>{company.name}</em> : <React.Fragment>{company.name}</React.Fragment>}
+                                    {
+										id === 0 ? <em>{company.name}</em> : <React.Fragment>{company.name}</React.Fragment>
+									}
                                 </MenuItem>)
                             }
                         </Select>
@@ -431,8 +500,12 @@ const handleCloseSnack = (event, reason) => {
                     </div>
                 </div>
             <div className="flex justify-center my-5 button-container">
-            <Button className="mr-4" variant="contained" disabled={submit === 'submitting'} onClick={resetForm} color="secondary">Reset</Button>
-            <Button variant="contained" color="primary" disabled={submit === 'submitting'} onClick={submitProduct}>Submit</Button>
+            <Button className="mr-4" variant="contained" disabled={submit === 'submitting'} onClick={(e) => resetForm(!!editModeProductID)} color="secondary">Reset</Button>
+            {
+                editModeProductID ? 
+                <Button variant="contained" color="primary" disabled={submit === 'submitting'} onClick={(e) => submitProduct(e, 'save')}>Save</Button> :
+                <Button variant="contained" color="primary" disabled={submit === 'submitting'} onClick={submitProduct}>Submit</Button>
+            }
             </div>
         </form>
         </div>

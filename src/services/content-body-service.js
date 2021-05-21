@@ -1,6 +1,10 @@
 import {firebaseDB as db} from './../config/firebase'
 
 
+const extractData = (dataObj) => {
+	return dataObj.docs.map(doc => ({...doc.data(), id: doc.id}))
+}
+
 const getRemoteBannerImages = async () => {
     try {
         const bannerDocs = await db.collection('main_banners').get()
@@ -13,6 +17,18 @@ const getRemoteBannerImages = async () => {
         console.log('error occured while reading banner images from database' , e)
         return []
     }
+}
+
+export const getLogisticsProviders = async () => {
+	try {
+		const doc = await db.collection('logistics-providers').get();
+		const result = extractData(doc);
+		console.log('result recieved as ', result);
+		return result;
+	} catch(e) {
+		console.error('An error occured while retrieving logistics details ', e);
+		return [];
+	}
 }
 
 async function populateDatabase(dumpData) {
