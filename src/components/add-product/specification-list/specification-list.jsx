@@ -14,8 +14,8 @@ export const SpecificationList = ({ addList, deleteList, spec, onUpdate, uniqueI
                 <TextField id={`value-${uniqueID}`} label="Value" variant="outlined" value={spec.value} onChange={onUpdate} />
                 {
                     addBtn ? 
-                        <IconButton aria-label="add more specificaions" color="primary" onClick={addList}><AddCircleOutlineOutlinedIcon/></IconButton> :
-                    <IconButton aria-label="delete specification" color="secondary" onClick={deleteList}><HighlightOffOutlinedIcon/></IconButton>
+                        <IconButton aria-label="add more specificaions" className="ml-2" color="primary" onClick={addList}><AddCircleOutlineOutlinedIcon/></IconButton> :
+                    <IconButton aria-label="delete specification" color="secondary" className="ml-2" onClick={deleteList}><HighlightOffOutlinedIcon/></IconButton>
                 }
                 </div>
             </div>

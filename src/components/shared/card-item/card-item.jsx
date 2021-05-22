@@ -12,6 +12,7 @@ import { OptionsMenu } from '../options-menu/options-menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import {ActionDialog} from './../../shared/action-dialog/action-dialog';
 import { AuthContext } from './../../../providers/auth-provider'
+
 export default function CardItem({item, onCardClick, onAction}) {
     const Auth = React.useContext(AuthContext)
     const [productImage, setProductImage] = useState(defaultImage)
@@ -141,7 +142,7 @@ export default function CardItem({item, onCardClick, onAction}) {
                              }
                         </p>
                         <div className={`cart-container ${Auth.isLoggedIn ? 'no-margin' : 'margin-right'}`}>
-                            <FontAwesomeIcon icon={faCartPlus} />
+						<FontAwesomeIcon icon={faCartPlus} className="icon-size-lg self-center" />
                             {Auth.isLoggedIn ? <React.Fragment>
                                 <OptionsMenu
                                 icon={<MoreVertIcon />}

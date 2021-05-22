@@ -14,7 +14,8 @@ export const OptionsMenu = ({
     hasPopup = true,
     menuType = 'long-menu',
     maxListWidth='20ch',
-    icon = <MoreVertIcon />
+    icon = <MoreVertIcon />,
+	displayRipple = true
      
 }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -41,6 +42,7 @@ export const OptionsMenu = ({
     return (
         <div>
           <IconButton
+		  	disableRipple={displayRipple}
             aria-label={iconLabel}
             aria-controls={menuType}
             aria-haspopup={hasPopup}
